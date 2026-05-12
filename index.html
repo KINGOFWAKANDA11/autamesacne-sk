@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AutoMesacne.sk — Financovanie auta online</title>
+  <meta name="description" content="Financovanie akéhokoľvek auta z celého Slovenska. Schválenie do 24 hodín, online podpis, aj bez akontácie." />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      color: #0F172A;
+    }
+
+    /* Custom range slider */
+    .slider-input {
+      height: 6px;
+      border-radius: 999px;
+      outline: none;
+    }
+    .slider-input::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid #1E3A8A;
+      box-shadow: 0 2px 8px rgba(30, 58, 138, 0.25);
+      cursor: pointer;
+      transition: transform .15s ease;
+      margin-top: -8px;
+    }
+    .slider-input::-webkit-slider-thumb:hover { transform: scale(1.08); }
+    .slider-input::-webkit-slider-thumb:active { transform: scale(0.96); }
+    .slider-input::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid #1E3A8A;
+      box-shadow: 0 2px 8px rgba(30, 58, 138, 0.25);
+      cursor: pointer;
+    }
+    .slider-input::-webkit-slider-runnable-track {
+      height: 6px;
+      border-radius: 999px;
+    }
+    .slider-input::-moz-range-track {
+      height: 6px;
+      border-radius: 999px;
+      background: transparent;
+    }
+    .slider-input:focus-visible {
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+    }
+
+    /* Reduce motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+      html { scroll-behavior: auto; }
+    }
+
+    /* Tabular nums helper */
+    .tabular-nums { font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body class="bg-white">
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="icons.jsx"></script>
+  <script type="text/babel" src="partners.jsx"></script>
+  <script type="text/babel" src="calculator.jsx"></script>
+  <script type="text/babel" src="form.jsx"></script>
+  <script type="text/babel" src="faq.jsx"></script>
+  <script type="text/babel" src="callback.jsx"></script>
+  <script type="text/babel" src="app.jsx"></script>
+</body>
+</html>
