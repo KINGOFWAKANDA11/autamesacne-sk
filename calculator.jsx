@@ -90,8 +90,8 @@ function HeroCalculator({ scrollToForm, setCalcPrefill }) {
   }, [trimmedUrl, urlIsValid, price, downPct, monthly, months, downPayment, setCalcPrefill]);
 
   return (
-    <div className="bg-white shadow-2xl rounded-2xl p-6 md:p-8 border border-slate-100">
-      <div className="flex items-center gap-3 mb-6">
+    <div className="bg-white shadow-2xl rounded-2xl p-5 md:p-6 border border-slate-100">
+      <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center">
           <Calculator className="w-5 h-5" />
         </div>
@@ -147,7 +147,7 @@ function HeroCalculator({ scrollToForm, setCalcPrefill }) {
       </div>
 
       {/* Divider */}
-      <div className="relative my-6">
+      <div className="relative my-3">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-slate-200"></div>
         </div>
@@ -156,7 +156,7 @@ function HeroCalculator({ scrollToForm, setCalcPrefill }) {
         </div>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         <RangeSlider
           label="Cena vozidla"
           value={price}
@@ -187,7 +187,7 @@ function HeroCalculator({ scrollToForm, setCalcPrefill }) {
         />
       </div>
 
-      <div className="mt-7 bg-blue-900 text-white rounded-xl p-6 relative overflow-hidden">
+      <div className="mt-4 bg-blue-900 text-white rounded-xl p-4 relative overflow-hidden">
         <div className="absolute -right-8 -top-8 w-40 h-40 rounded-full bg-blue-700/40 blur-2xl"></div>
         <div className="relative">
           <div className="text-xs uppercase tracking-wide text-blue-200 font-semibold">
@@ -212,12 +212,12 @@ function HeroCalculator({ scrollToForm, setCalcPrefill }) {
       <button
         type="button"
         onClick={scrollToForm}
-        className="mt-5 w-full bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-bold text-lg py-4 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg shadow-green-600/20"
+        className="mt-3 w-full bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-bold text-lg py-3 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg shadow-green-600/20"
       >
         Pokračovať k žiadosti
         <ArrowRight className="w-5 h-5" />
       </button>
-      <div className="mt-3 flex gap-2 items-start text-xs text-slate-500 leading-relaxed bg-amber-50/60 border border-amber-100 rounded-lg p-3">
+      <div className="mt-2 flex gap-2 items-start text-xs text-slate-500 leading-relaxed bg-amber-50/60 border border-amber-100 rounded-lg p-2.5">
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#B45309" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
         <span>
           <span className="font-semibold text-amber-900">Iba orientačný výpočet.</span>{" "}
