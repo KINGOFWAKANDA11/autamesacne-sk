@@ -10,7 +10,7 @@ function RangeSlider({ label, value, min, max, step, onChange, suffix, formatVal
   const pct = ((value - min) / (max - min)) * 100;
   return (
     <div>
-      <div className="flex items-baseline justify-between mb-2">
+      <div className="flex items-baseline justify-between mb-1">
         <label className="text-sm font-medium text-slate-700">{label}</label>
         <span className="text-lg font-bold text-blue-900 tabular-nums">
           {formatValue ? formatValue(value) : value}{suffix}
@@ -29,7 +29,7 @@ function RangeSlider({ label, value, min, max, step, onChange, suffix, formatVal
           background: `linear-gradient(to right, #3B82F6 0%, #3B82F6 ${pct}%, #E2E8F0 ${pct}%, #E2E8F0 100%)`,
         }}
       />
-      <div className="flex justify-between text-xs text-slate-400 mt-1.5 tabular-nums">
+      <div className="flex justify-between text-xs text-slate-400 mt-1 tabular-nums">
         <span>{formatValue ? formatValue(min) : min}{suffix}</span>
         <span>{formatValue ? formatValue(max) : max}{suffix}</span>
       </div>
@@ -116,7 +116,7 @@ function HeroCalculator({ scrollToForm, setCalcPrefill }) {
             value={carUrl}
             onChange={(e) => setCarUrl(e.target.value)}
             placeholder="https://www.autobazar.eu/..."
-            className={`w-full px-4 py-3 pr-11 border rounded-xl bg-white text-slate-900 placeholder-slate-400 transition focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 ${
+            className={`w-full px-4 py-2 pr-11 border rounded-xl bg-white text-slate-900 placeholder-slate-400 transition focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 ${
               urlFormatError
                 ? "border-rose-400 bg-rose-50/40"
                 : urlIsValid
@@ -139,22 +139,9 @@ function HeroCalculator({ scrollToForm, setCalcPrefill }) {
             Rozpoznaná platforma: {platform}
           </p>
         )}
-        {urlIsEmpty && (
-          <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
-            Stačí skopírovať link z inzerátu. Funguje Autobazar, Bazoš, Marketplace aj iné portály.
-          </p>
-        )}
       </div>
 
-      {/* Divider */}
-      <div className="relative my-3">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-slate-200"></div>
-        </div>
-        <div className="relative flex justify-center">
-          <span className="bg-white px-4 text-sm text-slate-400">alebo zadajte ručne</span>
-        </div>
-      </div>
+      <div className="border-t border-slate-200 my-2"></div>
 
       <div className="space-y-4">
         <RangeSlider
@@ -194,11 +181,11 @@ function HeroCalculator({ scrollToForm, setCalcPrefill }) {
             Vaša orientačná mesačná splátka
           </div>
           <div className="flex items-baseline gap-2 mt-1 tabular-nums leading-none">
-            <span className="text-2xl font-medium text-blue-200">od</span>
-            <span className="text-5xl font-extrabold">{formatEUR(monthly)}</span>
-            <span className="text-base font-medium text-blue-200">/ mes.</span>
+            <span className="text-xl font-medium text-blue-200">od</span>
+            <span className="text-4xl font-extrabold">{formatEUR(monthly)}</span>
+            <span className="text-sm font-medium text-blue-200">/ mes.</span>
           </div>
-          <div className="mt-3 flex items-center justify-between text-sm text-blue-100">
+          <div className="mt-2 flex items-center justify-between text-sm text-blue-100">
             <span>Akontácia</span>
             <span className="font-semibold tabular-nums">{formatEUR(downPayment)}</span>
           </div>
@@ -217,13 +204,7 @@ function HeroCalculator({ scrollToForm, setCalcPrefill }) {
         Pokračovať k žiadosti
         <ArrowRight className="w-5 h-5" />
       </button>
-      <div className="mt-2 flex gap-2 items-start text-xs text-slate-500 leading-relaxed bg-amber-50/60 border border-amber-100 rounded-lg p-2.5">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#B45309" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
-        <span>
-          <span className="font-semibold text-amber-900">Iba orientačný výpočet.</span>{" "}
-          Reálna sadzba a splátka závisia od konkrétneho vozidla, vášho profilu a podmienok leasing partnera. Presnú ponuku dostanete po vyplnení žiadosti.
-        </span>
-      </div>
+      <p className="mt-2 text-xs text-slate-400 text-center">Orientačný výpočet. Reálna splátka závisí od vášho profilu a partnera.</p>
     </div>
   );
 }

@@ -106,7 +106,7 @@ function Hero({ scrollToForm, setCalcPrefill }) {
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-blue-50/60 blur-3xl"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 md:py-10 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-start">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 md:py-8 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-start">
         <div className="order-2 lg:order-1">
           <div className="flex flex-wrap items-center gap-2">
             <div className="inline-flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-900 pl-2 pr-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide">
