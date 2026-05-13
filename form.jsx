@@ -42,7 +42,11 @@ function PhoneInput({ label, value, onChange, error, required }) {
         <input
           type="tel"
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => {
+            const d = e.target.value.replace(/\D/g, "").slice(0, 9);
+            const fmt = d.length <= 3 ? d : d.length <= 6 ? d.slice(0,3)+" "+d.slice(3) : d.slice(0,3)+" "+d.slice(3,6)+" "+d.slice(6);
+            onChange(fmt);
+          }}
           placeholder="9XX XXX XXX"
           className="flex-1 px-4 py-3 outline-none"
         />
@@ -107,19 +111,185 @@ function ReassuranceRow() {
   );
 }
 
+const MONTH_NAMES = ["Január","Február","Marec","Apríl","Máj","Jún","Júl","August","September","Október","November","December"];
+const DAY_NAMES = ["Po","Ut","St","Št","Pi","So","Ne"];
+
+function DatePicker({ label, value, onChange, error, required }) {
+  const [open, setOpen] = React.useState(false);
+  const [yearMode, setYearMode] = React.useState(false);
+  const [decadeStart, setDecadeStart] = React.useState(null);
+  const ref = React.useRef(null);
+
+  const parsed = value ? new Date(value + "T00:00:00") : null;
+  const [viewYear, setViewYear] = React.useState(() => parsed ? parsed.getFullYear() : new Date().getFullYear());
+  const [viewMonth, setViewMonth] = React.useState(() => parsed ? parsed.getMonth() : new Date().getMonth());
+
+  React.useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) { setOpen(false); setYearMode(false); } };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const display = parsed
+    ? `${String(parsed.getDate()).padStart(2,"0")}.${String(parsed.getMonth()+1).padStart(2,"0")}.${parsed.getFullYear()}`
+    : "";
+
+  // Month view helpers
+  const firstDayOfMonth = new Date(viewYear, viewMonth, 1).getDay();
+  const offset = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  const prevMonthDays = new Date(viewYear, viewMonth, 0).getDate();
+  const cells = [];
+  for (let i = offset - 1; i >= 0; i--) cells.push({ d: prevMonthDays - i, cur: false });
+  for (let d = 1; d <= daysInMonth; d++) cells.push({ d, cur: true });
+  while (cells.length < 42) cells.push({ d: cells.length - offset - daysInMonth + 1, cur: false });
+
+  const today = new Date();
+  const isSel = (d, cur) => cur && parsed && d === parsed.getDate() && viewMonth === parsed.getMonth() && viewYear === parsed.getFullYear();
+  const isNow = (d, cur) => cur && d === today.getDate() && viewMonth === today.getMonth() && viewYear === today.getFullYear();
+
+  const pick = (d, cur) => {
+    if (!cur) return;
+    const m = String(viewMonth + 1).padStart(2, "0");
+    onChange(`${viewYear}-${m}-${String(d).padStart(2,"0")}`);
+    setOpen(false);
+  };
+  const prevM = () => viewMonth === 0 ? (setViewMonth(11), setViewYear(y => y-1)) : setViewMonth(m => m-1);
+  const nextM = () => viewMonth === 11 ? (setViewMonth(0), setViewYear(y => y+1)) : setViewMonth(m => m+1);
+  const goToday = () => {
+    const n = new Date();
+    setViewMonth(n.getMonth()); setViewYear(n.getFullYear());
+    onChange(`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")}`);
+    setOpen(false);
+  };
+
+  // Year picker helpers — 12-year grid
+  const ds = decadeStart !== null ? decadeStart : viewYear - (viewYear % 12);
+  const years = Array.from({ length: 12 }, (_, i) => ds + i);
+
+  const openYearMode = () => { setDecadeStart(viewYear - (viewYear % 12)); setYearMode(true); };
+  const pickYear = (y) => { setViewYear(y); setYearMode(false); setDecadeStart(null); };
+
+  return (
+    <div ref={ref} className="relative">
+      <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+        {label}{required && <span className="text-rose-500 ml-1">*</span>}
+      </label>
+      <button
+        type="button"
+        onClick={() => { setOpen(o => !o); setYearMode(false); }}
+        className={`w-full px-4 py-3 border rounded-xl bg-white text-left flex items-center justify-between transition focus:outline-none focus:ring-2 focus:ring-blue-500/30 ${
+          error ? "border-rose-400 bg-rose-50/40" : open ? "border-blue-500" : "border-slate-200"
+        }`}
+      >
+        <span className={display ? "text-slate-900" : "text-slate-400"}>{display || "dd.mm.rrrr"}</span>
+        <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+        </svg>
+      </button>
+      {error && <p className="text-xs text-rose-600 mt-1.5 font-medium">{error}</p>}
+
+      {open && (
+        <div className="absolute z-50 mt-1.5 bg-white rounded-2xl shadow-2xl border border-slate-100 p-4 w-72">
+
+          {yearMode ? (
+            <>
+              <div className="flex items-center justify-between mb-3">
+                <button type="button" onClick={() => setDecadeStart(d => d - 12)} className="p-1.5 rounded-lg hover:bg-slate-100 transition text-slate-600">
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+                <span className="text-sm font-bold text-slate-900">{ds} — {ds + 11}</span>
+                <button type="button" onClick={() => setDecadeStart(d => d + 12)} className="p-1.5 rounded-lg hover:bg-slate-100 transition text-slate-600">
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="grid grid-cols-3 gap-1.5">
+                {years.map(y => (
+                  <button
+                    key={y}
+                    type="button"
+                    onClick={() => pickYear(y)}
+                    className={`py-2 rounded-lg text-sm font-semibold transition
+                      ${y === viewYear ? "bg-blue-900 text-white" : ""}
+                      ${y === today.getFullYear() && y !== viewYear ? "bg-blue-100 text-blue-900" : ""}
+                      ${y !== viewYear && y !== today.getFullYear() ? "hover:bg-slate-100 text-slate-700" : ""}
+                    `}
+                  >{y}</button>
+                ))}
+              </div>
+              <div className="flex justify-between mt-3 pt-3 border-t border-slate-100">
+                <button type="button" onClick={() => { onChange(""); setOpen(false); setYearMode(false); }} className="text-xs font-semibold text-blue-700 hover:text-blue-900 transition">Vymazať</button>
+                <button type="button" onClick={() => setYearMode(false)} className="text-xs font-semibold text-blue-700 hover:text-blue-900 transition">Späť</button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center justify-between mb-3">
+                <button type="button" onClick={prevM} className="p-1.5 rounded-lg hover:bg-slate-100 transition text-slate-600">
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+                <div className="flex items-center gap-1">
+                  <span className="text-sm font-bold text-slate-900">{MONTH_NAMES[viewMonth]}</span>
+                  <button
+                    type="button"
+                    onClick={openYearMode}
+                    className="text-sm font-bold text-blue-700 hover:text-blue-900 underline underline-offset-2 decoration-dotted transition px-1"
+                  >{viewYear}</button>
+                </div>
+                <button type="button" onClick={nextM} className="p-1.5 rounded-lg hover:bg-slate-100 transition text-slate-600">
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="grid grid-cols-7 mb-1">
+                {DAY_NAMES.map(d => (
+                  <div key={d} className="text-center text-xs font-semibold text-slate-400 py-1">{d}</div>
+                ))}
+              </div>
+              <div className="grid grid-cols-7 gap-y-0.5">
+                {cells.map((cell, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => pick(cell.d, cell.cur)}
+                    className={`h-8 w-8 mx-auto rounded-lg text-sm flex items-center justify-center transition
+                      ${!cell.cur ? "text-slate-300 cursor-default pointer-events-none" : ""}
+                      ${isSel(cell.d, cell.cur) ? "bg-blue-900 text-white font-bold" : ""}
+                      ${isNow(cell.d, cell.cur) && !isSel(cell.d, cell.cur) ? "bg-blue-100 text-blue-900 font-bold" : ""}
+                      ${cell.cur && !isSel(cell.d, cell.cur) && !isNow(cell.d, cell.cur) ? "hover:bg-slate-100 text-slate-700" : ""}
+                    `}
+                  >{cell.d}</button>
+                ))}
+              </div>
+              <div className="flex justify-between mt-3 pt-3 border-t border-slate-100">
+                <button type="button" onClick={() => { onChange(""); setOpen(false); }} className="text-xs font-semibold text-blue-700 hover:text-blue-900 transition">Vymazať</button>
+                <button type="button" onClick={goToday} className="text-xs font-semibold text-blue-700 hover:text-blue-900 transition">Dnes</button>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function LeadForm({ committedHero, scrollToTop }) {
   const [step, setStep] = useFState(1);
   const [submitted, setSubmitted] = useFState(false);
   const [errors, setErrors] = useFState({});
 
-  // Step 1
-  const [carUrl, setCarUrl] = useFState("");
-  const [carPrice, setCarPrice] = useFState("");
+  useFEffect(() => {
+    if (!submitted) return;
+    const el = document.getElementById("form");
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [submitted]);
+
+  // Step 1 — null = "user hasn't touched this field, follow calculator live"
+  const [_carUrl, setCarUrl] = useFState(null);
+  const [_carPrice, setCarPrice] = useFState(null);
   const [carYear, setCarYear] = useFState("");
 
   // Step 2
   const [incomeType, setIncomeType] = useFState("");
-  // employee fields
   const [fullName, setFullName] = useFState("");
   const [birthDate, setBirthDate] = useFState("");
   const [address, setAddress] = useFState("");
@@ -127,37 +297,27 @@ function LeadForm({ committedHero, scrollToTop }) {
   const [zip, setZip] = useFState("");
   const [employmentStart, setEmploymentStart] = useFState("");
   const [salary, setSalary] = useFState("");
-  // szco/sro fields
   const [ico, setIco] = useFState("");
   const [dic, setDic] = useFState("");
   const [monthlyCosts, setMonthlyCosts] = useFState("");
   const [monthlyIncome, setMonthlyIncome] = useFState("");
   const [vatPayer, setVatPayer] = useFState("");
 
-  // Step 3
-  const [downPayment, setDownPayment] = useFState("");
-  const [desiredMonthly, setDesiredMonthly] = useFState("");
-  const [loanMonths, setLoanMonths] = useFState(60);
+  // Step 3 — null = follow calculator live
+  const [_downPayment, setDownPayment] = useFState(null);
+  const [_desiredMonthly, setDesiredMonthly] = useFState(null);
+  const [_loanMonths, setLoanMonths] = useFState(null);
   const [email, setEmail] = useFState("");
   const [phone, setPhone] = useFState("");
   const [notes, setNotes] = useFState("");
   const [gdpr, setGdpr] = useFState(false);
 
-  // Apply prefill from hero whenever the user commits a hero snapshot (any CTA click).
-  // We only fill EMPTY fields — never overwrite what the user already typed.
-  useFEffect(() => {
-    if (!committedHero) return;
-    // Step 1: carUrl
-    setCarUrl((v) => (v === "" && committedHero.carUrl ? committedHero.carUrl : v));
-    // Step 1: carPrice — only prefill if there is no URL (fields would be hidden if URL present)
-    if (!committedHero.carUrl) {
-      setCarPrice((v) => (v === "" && committedHero.carPrice ? String(committedHero.carPrice) : v));
-    }
-    // Step 3: financing fields
-    setDesiredMonthly((v) => (v === "" && committedHero.monthly ? String(committedHero.monthly) : v));
-    setLoanMonths((v) => v || committedHero.months || 60);
-    setDownPayment((v) => (v === "" && committedHero.downPayment ? String(committedHero.downPayment) : v));
-  }, [committedHero]);
+  // Effective values: user-typed takes priority, otherwise live calculator value.
+  const carUrl = _carUrl !== null ? _carUrl : (committedHero?.carUrl || "");
+  const carPrice = _carPrice !== null ? _carPrice : (committedHero?.carPrice ? String(committedHero.carPrice) : "");
+  const downPayment = _downPayment !== null ? _downPayment : (committedHero?.downPayment ? String(committedHero.downPayment) : "");
+  const desiredMonthly = _desiredMonthly !== null ? _desiredMonthly : (committedHero?.monthly ? String(Math.round(committedHero.monthly)) : "");
+  const loanMonths = _loanMonths !== null ? _loanMonths : (committedHero?.months || 60);
 
   const showCarFallback = carUrl.trim() === "";
   const isBusiness = incomeType === "szco" || incomeType === "sro";
@@ -252,7 +412,7 @@ function LeadForm({ committedHero, scrollToTop }) {
 
       {step === 1 && (
         <div className="space-y-5">
-          <div>
+<div>
             <label className="block text-sm font-semibold text-slate-700 mb-1.5">
               Odkaz na vozidlo
             </label>
@@ -358,7 +518,7 @@ function LeadForm({ committedHero, scrollToTop }) {
           {isEmployee && (
             <div className="space-y-4 pt-2 border-t border-slate-100">
               <TextInput label="Meno a priezvisko" value={fullName} onChange={setFullName} placeholder="Ján Novák" error={errors.fullName} required />
-              <TextInput label="Dátum narodenia" type="date" value={birthDate} onChange={setBirthDate} error={errors.birthDate} required />
+              <DatePicker label="Dátum narodenia" value={birthDate} onChange={setBirthDate} error={errors.birthDate} required />
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="md:col-span-2">
                   <TextInput label="Adresa" value={address} onChange={setAddress} placeholder="Hlavná 12" />
@@ -366,7 +526,7 @@ function LeadForm({ committedHero, scrollToTop }) {
                 <TextInput label="Mesto" value={city} onChange={setCity} placeholder="Bratislava" />
                 <TextInput label="PSČ" value={zip} onChange={setZip} placeholder="811 01" maxLength={6} />
               </div>
-              <TextInput label="Dátum nástupu do zamestnania" type="date" value={employmentStart} onChange={setEmploymentStart} />
+              <DatePicker label="Dátum nástupu do zamestnania" value={employmentStart} onChange={setEmploymentStart} />
               <TextInput label="Priemerný čistý mesačný plat za 3 mesiace (€)" type="number" value={salary} onChange={setSalary} placeholder="napr. 1400" error={errors.salary} required />
             </div>
           )}
@@ -504,7 +664,9 @@ function LeadForm({ committedHero, scrollToTop }) {
               className="mt-0.5 w-5 h-5 rounded border-slate-300 text-green-600 focus:ring-green-500 shrink-0"
             />
             <span className="text-sm text-slate-700 leading-relaxed">
-              Súhlasím so spracovaním osobných údajov v zmysle GDPR. <span className="text-rose-500">*</span>
+              Súhlasím so spracovaním osobných údajov v zmysle{" "}
+              <a href="/gdpr.html" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline hover:text-blue-800" onClick={(e) => e.stopPropagation()}>zásad ochrany osobných údajov</a>.{" "}
+              <span className="text-rose-500">*</span>
             </span>
           </label>
           {errors.gdpr && <p className="text-xs text-rose-600 font-medium -mt-3">{errors.gdpr}</p>}

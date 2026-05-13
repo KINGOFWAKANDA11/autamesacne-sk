@@ -49,8 +49,8 @@ const pillars = [
 
 const stats = [
   { value: "15+", label: "rokov skúseností" },
-  { value: "5 000+", label: "vybavených klientov" },
-  { value: "12", label: "leasing partnerov" },
+  { value: "800+", label: "vybavených klientov" },
+  { value: "6", label: "leasing partnerov" },
   { value: "24 h", label: "priemerná doba schválenia" },
 ];
 
@@ -64,21 +64,11 @@ function TopBar({ scrollToForm, scrolled }) {
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
-        <a href="#top" className="flex items-center gap-2 select-none">
-          <div className="w-8 h-8 bg-blue-900 rounded-lg flex items-center justify-center">
-            <Car className="w-5 h-5 text-white" strokeWidth={2.4} />
-          </div>
-          <span className="text-lg sm:text-xl font-extrabold text-blue-900 tracking-tight">
-            AutoMesacne<span className="text-blue-500">.sk</span>
-          </span>
+        <a href="#top" className="flex items-center select-none">
+          <img src="logo.png" alt="AutoMesacne.sk" className="h-10 sm:h-12 w-auto" />
         </a>
 
         <div className="hidden md:flex items-center gap-3 text-sm">
-          <div className="flex items-center gap-2 text-slate-700">
-            <Phone className="w-4 h-4 text-blue-700" />
-            <a href="tel:+421911234567" className="font-semibold hover:text-blue-700">+421 911 234 567</a>
-          </div>
-          <span className="text-slate-300">·</span>
           <div className="flex items-center gap-1.5 text-slate-500">
             <Clock className="w-4 h-4" />
             <span>Po-Pi 8:00 až 17:00</span>
@@ -155,7 +145,7 @@ function Hero({ scrollToForm, setCalcPrefill }) {
 
           <div className="hidden lg:flex items-center gap-6 mt-8 pt-7 border-t border-slate-200/60">
             <div>
-              <div className="text-3xl font-extrabold text-blue-900">5 000+</div>
+              <div className="text-3xl font-extrabold text-blue-900">800+</div>
               <div className="text-xs text-slate-500 uppercase tracking-wide font-semibold mt-0.5">spokojných klientov</div>
             </div>
             <div className="w-px h-12 bg-slate-200"></div>
@@ -506,10 +496,6 @@ function Footer() {
             <h4 className="text-white font-bold mb-3 text-sm uppercase tracking-wider">Kontakt</h4>
             <ul className="space-y-2 text-sm">
               <li className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-blue-400" />
-                <a href="tel:+421911234567" className="hover:text-white">+421 911 234 567</a>
-              </li>
-              <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-blue-400" />
                 <a href="mailto:info@automesacne.sk" className="hover:text-white">info@automesacne.sk</a>
               </li>
@@ -523,16 +509,18 @@ function Footer() {
           <div>
             <h4 className="text-white font-bold mb-3 text-sm uppercase tracking-wider">Spoločnosť</h4>
             <ul className="space-y-2 text-sm text-slate-400">
-              <li>IČO: 00 000 000</li>
-              <li>Sídlo: Bratislava, Slovensko</li>
+              <li>IČO: 55343198</li>
+              <li>DIČ: 2121960291</li>
+              <li>IČ DPH: SK2121960291</li>
+              <li>Sídlo: Hlavná 571/124, 946 32 Marcelová</li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-white font-bold mb-3 text-sm uppercase tracking-wider">Právne</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="hover:text-white">Ochrana osobných údajov</a></li>
-              <li><a href="#" className="hover:text-white">Spracovanie cookies</a></li>
+              <li><a href="/gdpr.html" className="hover:text-white">Ochrana osobných údajov</a></li>
+              <li><a href="/gdpr.html" className="hover:text-white">Spracovanie cookies</a></li>
             </ul>
           </div>
         </div>
@@ -600,6 +588,7 @@ function App() {
 
   const setCalcPrefill = useACallback((data) => {
     heroDataRef.current = data;
+    setCommittedHero((prev) => ({ ...data }));
   }, []);
 
   const scrollToForm = useACallback(() => {

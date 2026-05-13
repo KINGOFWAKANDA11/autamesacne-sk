@@ -96,7 +96,11 @@ function CallbackWidget() {
                 <input
                   type="tel"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => {
+                    const d = e.target.value.replace(/\D/g, "").slice(0, 9);
+                    const fmt = d.length <= 3 ? d : d.length <= 6 ? d.slice(0,3)+" "+d.slice(3) : d.slice(0,3)+" "+d.slice(3,6)+" "+d.slice(6);
+                    setPhone(fmt);
+                  }}
                   placeholder="9XX XXX XXX"
                   className="flex-1 px-3 py-2.5 text-sm outline-none"
                 />

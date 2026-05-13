@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vaša zmluva čaká na podpis</title>
+</head>
+<body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f1f5f9;padding:40px 0;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+
+      <!-- HEADER -->
+      <tr><td style="background:#1e3a8a;border-radius:12px 12px 0 0;padding:32px 40px;text-align:center;">
+        <div style="font-size:22px;font-weight:900;color:#ffffff;letter-spacing:-0.5px;">
+          AUTO<span style="color:#60a5fa;">MESAČNE</span><span style="color:#93c5fd;font-weight:400;font-size:16px;">.sk</span>
+        </div>
+        <div style="color:#93c5fd;font-size:13px;margin-top:4px;">Financovanie áut jednoducho a rýchlo</div>
+      </td></tr>
+
+      <!-- BODY -->
+      <tr><td style="background:#ffffff;padding:40px 40px 32px;">
+        <h1 style="margin:0 0 20px;font-size:22px;font-weight:800;color:#0f172a;">Zmluva je pripravená na podpis</h1>
+        <p style="margin:0 0 8px;font-size:15px;color:#64748b;">Dobrý deň, <strong style="color:#0f172a;">{{meno}}</strong>,</p>
+        <p style="margin:0 0 24px;color:#334155;font-size:15px;line-height:1.6;">
+          Vaša zmluva o financovaní vozidla je pripravená. Podpíšte ju online — celý proces trvá menej ako 2 minúty.
+        </p>
+
+        <!-- URGENCY BOX -->
+        <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+          <tr><td style="background:#fefce8;border:1px solid #fde68a;border-radius:10px;padding:16px 20px;">
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td width="32" valign="middle" style="font-size:20px;">&#9201;</td>
+                <td style="color:#92400e;font-size:14px;font-weight:600;padding-left:8px;">
+                  Link na podpis je platný do <strong>{{platnost_linku}}</strong>. Po uplynutí bude nutné požiadať o nový.
+                </td>
+              </tr>
+            </table>
+          </td></tr>
+        </table>
+
+        <!-- CONTRACT SUMMARY -->
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:28px;">
+          <tr><td style="padding:20px 24px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:16px;">Zhrnutie zmluvy</div>
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="padding:7px 0;color:#64748b;font-size:14px;">Vozidlo</td>
+                <td style="padding:7px 0;text-align:right;font-weight:700;color:#0f172a;font-size:14px;">{{vozidlo}}</td>
+              </tr>
+              <tr>
+                <td style="padding:7px 0;color:#64748b;font-size:14px;border-top:1px solid #e2e8f0;">Mesačná splátka</td>
+                <td style="padding:7px 0;text-align:right;font-weight:800;color:#1e3a8a;font-size:16px;border-top:1px solid #e2e8f0;">{{splatka}} €</td>
+              </tr>
+              <tr>
+                <td style="padding:7px 0;color:#64748b;font-size:14px;border-top:1px solid #e2e8f0;">Prvá splátka</td>
+                <td style="padding:7px 0;text-align:right;font-weight:700;color:#0f172a;font-size:14px;border-top:1px solid #e2e8f0;">{{datum_prvej_splatky}}</td>
+              </tr>
+              <tr>
+                <td style="padding:7px 0;color:#64748b;font-size:14px;border-top:1px solid #e2e8f0;">Partner</td>
+                <td style="padding:7px 0;text-align:right;font-weight:700;color:#0f172a;font-size:14px;border-top:1px solid #e2e8f0;">{{partner}}</td>
+              </tr>
+            </table>
+          </td></tr>
+        </table>
+
+        <!-- CTA -->
+        <table width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td align="center" style="padding-bottom:16px;">
+              <a href="{{link_podpisu}}" style="display:inline-block;background:#16a34a;color:#ffffff;font-size:16px;font-weight:700;text-decoration:none;padding:16px 48px;border-radius:10px;">
+                Podpísať zmluvu
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td align="center">
+              <p style="margin:0;color:#94a3b8;font-size:12px;">
+                Zmluva je priložená aj ako PDF v prílohe tohto emailu.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td></tr>
+
+      <!-- FOOTER -->
+      <tr><td style="background:#f8fafc;border-top:1px solid #e2e8f0;border-radius:0 0 12px 12px;padding:24px 40px;text-align:center;">
+        <p style="margin:0 0 8px;color:#94a3b8;font-size:12px;">Otázky? Sme tu pre vás.</p>
+        <p style="margin:0;color:#64748b;font-size:13px;">
+          <a href="tel:+421911234567" style="color:#2563eb;text-decoration:none;font-weight:600;">+421 911 234 567</a>
+          &nbsp;·&nbsp;
+          <a href="mailto:info@automesacne.sk" style="color:#2563eb;text-decoration:none;">info@automesacne.sk</a>
+        </p>
+        <p style="margin:16px 0 0;color:#cbd5e1;font-size:11px;">© 2026 AutoMesacne.sk · Po-Pi 8:00 až 17:00</p>
+      </td></tr>
+
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>

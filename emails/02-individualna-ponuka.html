@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vaša individuálna ponuka</title>
+</head>
+<body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f1f5f9;padding:40px 0;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+
+      <!-- HEADER -->
+      <tr><td style="background:#1e3a8a;border-radius:12px 12px 0 0;padding:32px 40px;text-align:center;">
+        <div style="font-size:22px;font-weight:900;color:#ffffff;letter-spacing:-0.5px;">
+          AUTO<span style="color:#60a5fa;">MESAČNE</span><span style="color:#93c5fd;font-weight:400;font-size:16px;">.sk</span>
+        </div>
+        <div style="color:#93c5fd;font-size:13px;margin-top:4px;">Financovanie áut jednoducho a rýchlo</div>
+      </td></tr>
+
+      <!-- HERO OFFER -->
+      <tr><td style="background:#1e3a8a;padding:0 40px 36px;text-align:center;">
+        <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:12px;padding:28px 24px;">
+          <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#93c5fd;margin-bottom:8px;">Vaša mesačná splátka</div>
+          <div style="font-size:48px;font-weight:900;color:#ffffff;line-height:1;">{{splatka}} €</div>
+          <div style="font-size:14px;color:#93c5fd;margin-top:4px;">/ mesiac · cez <strong style="color:#ffffff;">{{partner}}</strong></div>
+        </div>
+      </td></tr>
+
+      <!-- BODY -->
+      <tr><td style="background:#ffffff;padding:36px 40px 32px;">
+        <p style="margin:0 0 8px;font-size:15px;color:#64748b;">Dobrý deň, <strong style="color:#0f172a;">{{meno}}</strong>,</p>
+        <p style="margin:0 0 28px;color:#334155;font-size:15px;line-height:1.6;">
+          Pripravili sme pre vás individuálnu ponuku financovania. Ponuka je platná do <strong>{{platnost}}</strong>.
+        </p>
+
+        <!-- OFFER DETAILS -->
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:28px;">
+          <tr><td style="padding:20px 24px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:16px;">Detail ponuky</div>
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="padding:7px 0;color:#64748b;font-size:14px;">Leasing partner</td>
+                <td style="padding:7px 0;text-align:right;font-weight:700;color:#0f172a;font-size:14px;">{{partner}}</td>
+              </tr>
+              <tr>
+                <td style="padding:7px 0;color:#64748b;font-size:14px;border-top:1px solid #e2e8f0;">Cena vozidla</td>
+                <td style="padding:7px 0;text-align:right;font-weight:700;color:#0f172a;font-size:14px;border-top:1px solid #e2e8f0;">{{cena_auta}} €</td>
+              </tr>
+              <tr>
+                <td style="padding:7px 0;color:#64748b;font-size:14px;border-top:1px solid #e2e8f0;">Akontácia</td>
+                <td style="padding:7px 0;text-align:right;font-weight:700;color:#0f172a;font-size:14px;border-top:1px solid #e2e8f0;">{{akontacia}} €</td>
+              </tr>
+              <tr>
+                <td style="padding:7px 0;color:#64748b;font-size:14px;border-top:1px solid #e2e8f0;">Doba splácania</td>
+                <td style="padding:7px 0;text-align:right;font-weight:700;color:#0f172a;font-size:14px;border-top:1px solid #e2e8f0;">{{doba}} mesiacov</td>
+              </tr>
+              <tr>
+                <td style="padding:7px 0;color:#64748b;font-size:14px;border-top:1px solid #e2e8f0;">RPMN</td>
+                <td style="padding:7px 0;text-align:right;font-weight:700;color:#0f172a;font-size:14px;border-top:1px solid #e2e8f0;">{{rpmn}} %</td>
+              </tr>
+              <tr>
+                <td style="padding:7px 0;color:#64748b;font-size:14px;border-top:1px solid #e2e8f0;">Celková suma na úhradu</td>
+                <td style="padding:7px 0;text-align:right;font-weight:700;color:#0f172a;font-size:14px;border-top:1px solid #e2e8f0;">{{suma_celkom}} €</td>
+              </tr>
+            </table>
+          </td></tr>
+        </table>
+
+        <!-- CTA -->
+        <table width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td align="center" style="padding-bottom:16px;">
+              <a href="{{link_prijat}}" style="display:inline-block;background:#16a34a;color:#ffffff;font-size:16px;font-weight:700;text-decoration:none;padding:14px 40px;border-radius:10px;">
+                Prijať ponuku
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td align="center">
+              <a href="{{link_upravit}}" style="color:#2563eb;font-size:13px;text-decoration:underline;">Chcem upraviť podmienky</a>
+            </td>
+          </tr>
+        </table>
+
+        <p style="margin:24px 0 0;color:#94a3b8;font-size:12px;line-height:1.6;text-align:center;">
+          Ide o záväznú ponuku platí do {{platnost}}. Po uplynutí platnosti bude nutné požiadať o novú ponuku.
+        </p>
+      </td></tr>
+
+      <!-- FOOTER -->
+      <tr><td style="background:#f8fafc;border-top:1px solid #e2e8f0;border-radius:0 0 12px 12px;padding:24px 40px;text-align:center;">
+        <p style="margin:0 0 8px;color:#94a3b8;font-size:12px;">Otázky? Sme tu pre vás.</p>
+        <p style="margin:0;color:#64748b;font-size:13px;">
+          <a href="tel:+421911234567" style="color:#2563eb;text-decoration:none;font-weight:600;">+421 911 234 567</a>
+          &nbsp;·&nbsp;
+          <a href="mailto:info@automesacne.sk" style="color:#2563eb;text-decoration:none;">info@automesacne.sk</a>
+        </p>
+        <p style="margin:16px 0 0;color:#cbd5e1;font-size:11px;">© 2026 AutoMesacne.sk · Po-Pi 8:00 až 17:00</p>
+      </td></tr>
+
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>

@@ -7,14 +7,44 @@ const formatEUR = (n) => {
 };
 
 function RangeSlider({ label, value, min, max, step, onChange, suffix, formatValue }) {
+  const [inputVal, setInputVal] = useState(String(value));
+  const [focused, setFocused] = useState(false);
+
+  useEffect(() => {
+    if (!focused) setInputVal(String(value));
+  }, [value, focused]);
+
+  const commit = (raw) => {
+    const parsed = parseInt(raw.replace(/\s/g, ""), 10);
+    if (!isNaN(parsed)) {
+      const clamped = Math.min(max, Math.max(min, parsed));
+      onChange(clamped);
+      setInputVal(String(clamped));
+    } else {
+      setInputVal(String(value));
+    }
+  };
+
   const pct = ((value - min) / (max - min)) * 100;
+  const displayVal = focused ? inputVal : (formatValue ? formatValue(value) : String(value));
+
   return (
     <div>
       <div className="flex items-baseline justify-between mb-1">
         <label className="text-sm font-medium text-slate-700">{label}</label>
-        <span className="text-lg font-bold text-blue-900 tabular-nums">
-          {formatValue ? formatValue(value) : value}{suffix}
-        </span>
+        <div className="flex items-baseline gap-0.5">
+          <input
+            type="text"
+            inputMode="numeric"
+            value={displayVal}
+            onFocus={() => { setFocused(true); setInputVal(String(value)); }}
+            onChange={(e) => setInputVal(e.target.value)}
+            onBlur={() => { setFocused(false); commit(inputVal); }}
+            onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }}
+            className="text-lg font-bold text-blue-900 tabular-nums text-right bg-transparent border-b-2 border-transparent focus:border-blue-500 focus:outline-none w-24"
+          />
+          <span className="text-lg font-bold text-blue-900 whitespace-nowrap">{suffix}</span>
+        </div>
       </div>
       <input
         type="range"
