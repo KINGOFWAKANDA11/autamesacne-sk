@@ -65,7 +65,7 @@ function TopBar({ scrollToForm, scrolled }) {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
         <a href="#top" className="flex items-center select-none">
-          <img src="logo.png" alt="AutoMesacne.sk" className="h-10 sm:h-12 w-auto" />
+          <img src="logo.png" alt="AutoMesacne.sk" className="h-12 sm:h-14 w-auto" />
         </a>
 
         <div className="hidden md:flex items-center gap-3 text-sm">
@@ -480,7 +480,7 @@ function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-1">
             <div className="mb-3">
-              <img src="logo.png" alt="AutoMesacne.sk" className="h-10 w-auto brightness-0 invert" />
+              <img src="logo-footer.png" alt="AutoMesacne.sk" className="h-32 w-auto" />
             </div>
             <p className="text-sm leading-relaxed text-slate-400">
               Financovanie auta z celého Slovenska. Rýchlo, online, bez papierovania.
