@@ -54,38 +54,7 @@ const stats = [
   { value: "24 h", label: "priemerná doba schválenia" },
 ];
 
-function TopBar({ scrollToForm, scrolled }) {
-  return (
-    <header
-      className={`sticky top-0 z-40 transition-all duration-200 ${
-        scrolled
-          ? "bg-white/90 backdrop-blur-md shadow-sm py-2.5"
-          : "bg-white py-4"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
-        <a href="#top" className="flex items-center select-none">
-          <img src="logo.png" alt="AutoMesacne.sk" className="h-8 sm:h-10 w-auto max-w-[180px] sm:max-w-[220px]" />
-        </a>
-
-        <div className="hidden md:flex items-center gap-3 text-sm">
-          <div className="flex items-center gap-1.5 text-slate-500">
-            <Clock className="w-4 h-4" />
-            <span>Po-Pi 8:00 až 17:00</span>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          onClick={scrollToForm}
-          className="bg-green-600 hover:bg-green-700 text-white font-bold px-4 sm:px-5 py-2.5 rounded-lg transition-colors shadow-md shadow-green-600/20 text-sm sm:text-base"
-        >
-          Získať ponuku
-        </button>
-      </div>
-    </header>
-  );
-}
+// TopBar replaced by shared <SiteNav /> from nav.jsx
 
 function Hero({ scrollToForm, setCalcPrefill }) {
   return (
@@ -473,60 +442,7 @@ function FinalCTA({ scrollToForm }) {
   );
 }
 
-function Footer() {
-  return (
-    <footer className="bg-slate-900 text-slate-300 py-12 px-4 sm:px-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="md:col-span-1">
-            <div className="mb-3">
-              <img src="logo-footer.png" alt="AutoMesacne.sk" className="h-16 w-auto max-w-[220px]" />
-            </div>
-            <p className="text-sm leading-relaxed text-slate-400">
-              Financovanie auta z celého Slovenska. Rýchlo, online, bez papierovania.
-            </p>
-          </div>
-
-          <div>
-            <h4 className="text-white font-bold mb-3 text-sm uppercase tracking-wider">Kontakt</h4>
-            <ul className="space-y-2 text-sm">
-              <li className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-blue-400" />
-                <a href="mailto:info@automesacne.sk" className="hover:text-white">info@automesacne.sk</a>
-              </li>
-              <li className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-blue-400" />
-                <span>Po-Pi 8:00 až 17:00</span>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-white font-bold mb-3 text-sm uppercase tracking-wider">Spoločnosť</h4>
-            <ul className="space-y-2 text-sm text-slate-400">
-              <li>IČO: 55343198</li>
-              <li>DIČ: 2121960291</li>
-              <li>IČ DPH: SK2121960291</li>
-              <li>Sídlo: Hlavná 571/124, 946 32 Marcelová</li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-white font-bold mb-3 text-sm uppercase tracking-wider">Právne</h4>
-            <ul className="space-y-2 text-sm">
-              <li><a href="/gdpr.html" className="hover:text-white">Ochrana osobných údajov</a></li>
-              <li><a href="/gdpr.html" className="hover:text-white">Spracovanie cookies</a></li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="mt-10 pt-6 border-t border-slate-800 text-sm text-slate-500 text-center">
-          © 2026 AutoMesacne.sk. Všetky práva vyhradené.
-        </div>
-      </div>
-    </footer>
-  );
-}
+// Footer replaced by shared <SiteFooter /> from nav.jsx
 
 function FloatingDesktopCTA({ visible, scrollToForm }) {
   return (
@@ -624,7 +540,7 @@ function App() {
 
   return (
     <div id="top" className="bg-white text-slate-900 min-h-screen">
-      <TopBar scrollToForm={scrollToForm} scrolled={scrolled} />
+      <SiteNav active="home" scrollToForm={scrollToForm} />
       <main>
         <Hero scrollToForm={scrollToForm} setCalcPrefill={setCalcPrefill} />
         <PartnersStrip />
@@ -637,7 +553,7 @@ function App() {
         <FAQSection />
         <FinalCTA scrollToForm={scrollToForm} />
       </main>
-      <Footer />
+      <SiteFooter />
       {/* Spacer so mobile sticky CTA doesn't cover footer text */}
       <div className="md:hidden h-20" aria-hidden="true"></div>
 
