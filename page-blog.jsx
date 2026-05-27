@@ -128,42 +128,6 @@ function BlogGrid() {
   );
 }
 
-function NewsletterCTA() {
-  return (
-    <section className="bg-slate-50 py-20 px-4 sm:px-6 border-y border-slate-100">
-      <div className="max-w-3xl mx-auto bg-gradient-to-br from-blue-900 to-blue-700 rounded-3xl p-10 sm:p-14 text-center relative overflow-hidden">
-        <div className="absolute inset-0 opacity-30 pointer-events-none">
-          <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-blue-400/30 blur-3xl"></div>
-        </div>
-        <div className="relative">
-          <Mail className="w-10 h-10 text-blue-200 mx-auto mb-4" />
-          <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight">
-            Novinky priamo do emailu
-          </h2>
-          <p className="mt-4 text-blue-100">
-            Raz mesačne posielame zhrnutie zmien v leasingu, nové recenzie áut a tipy pre žiadateľov.
-          </p>
-          <form className="mt-7 flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onSubmit={(e) => e.preventDefault()}>
-            <input
-              type="email"
-              required
-              placeholder="meno@email.sk"
-              className="flex-1 px-5 py-3.5 rounded-xl text-slate-900 bg-white border-0 focus:ring-2 focus:ring-blue-400 outline-none"
-            />
-            <button
-              type="submit"
-              className="bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-3.5 rounded-xl transition-colors shadow-lg shadow-green-900/30"
-            >
-              Odoberať
-            </button>
-          </form>
-          <p className="mt-3 text-xs text-blue-200">Bezplatne, kedykoľvek sa môžete odhlásiť.</p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function BlogApp() {
   return (
     <div className="bg-white text-slate-900 min-h-screen">
@@ -171,7 +135,6 @@ function BlogApp() {
       <main>
         <BlogHero />
         <BlogGrid />
-        <NewsletterCTA />
       </main>
       <SiteFooter />
     </div>

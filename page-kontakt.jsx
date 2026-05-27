@@ -28,9 +28,7 @@ function KontaktHero() {
 
 function ContactInfoCard() {
   const items = [
-    { Icon: Phone, label: "Telefón", value: "+421 905 123 456", href: "tel:+421905123456" },
     { Icon: Mail, label: "Email", value: "info@automesacne.sk", href: "mailto:info@automesacne.sk" },
-    { Icon: MessageCircle, label: "WhatsApp", value: "+421 905 123 456", href: "https://wa.me/421905123456" },
     { Icon: Clock, label: "Otváracie hodiny", value: "Po-Pi 8:00 až 17:00" },
     { Icon: MapPin, label: "Adresa", value: "Hlavná 571/124, 946 32 Marcelová" },
   ];
@@ -61,17 +59,10 @@ function ContactInfoCard() {
       </ul>
 
       <div className="mt-8 pt-6 border-t border-slate-100">
-        <div className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-3">Spätné volanie</div>
-        <p className="text-sm text-slate-600 leading-relaxed mb-4">
-          Nemáte čas vypisovať formulár? Necháte nám číslo a my zavoláme my, do 60 minút v pracovnej dobe.
+        <div className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-3">Preferujete email?</div>
+        <p className="text-sm text-slate-600 leading-relaxed">
+          Napíšte nám priamo na <a href="mailto:info@automesacne.sk" className="text-blue-900 font-semibold underline underline-offset-2">info@automesacne.sk</a>. Odpoveď do 24 hodín v pracovných dňoch.
         </p>
-        <a
-          href="tel:+421905123456"
-          className="inline-flex items-center gap-2 bg-blue-900 hover:bg-blue-800 text-white font-bold px-5 py-3 rounded-xl transition-colors"
-        >
-          <Phone className="w-4 h-4" />
-          Zavolajte nám
-        </a>
       </div>
     </div>
   );
