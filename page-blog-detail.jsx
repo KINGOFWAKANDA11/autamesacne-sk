@@ -168,7 +168,7 @@ function RelatedPosts({ currentSlug }) {
           {related.map((p) => {
             const tagColor = TAG_COLORS[p.tag] || "bg-slate-100 text-slate-800";
             return (
-              <a key={p.slug} href={`/blog/${p.slug}`} className="group bg-white rounded-2xl border border-slate-200 hover:border-blue-300 hover:shadow-lg transition-all overflow-hidden flex flex-col">
+              <a key={p.slug} href={`/blog-detail?slug=${p.slug}`} className="group bg-white rounded-2xl border border-slate-200 hover:border-blue-300 hover:shadow-lg transition-all overflow-hidden flex flex-col">
                 <div className={`relative aspect-[16/10] bg-gradient-to-br ${p.color} flex items-center justify-center`}>
                   {p.isVideo ? (
                     <div className="w-14 h-14 rounded-full bg-white/95 text-blue-900 flex items-center justify-center">

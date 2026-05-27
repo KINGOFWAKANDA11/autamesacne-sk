@@ -24,7 +24,7 @@ function PostCard({ post, large = false }) {
   const tagColor = TAG_COLORS[post.tag] || "bg-slate-100 text-slate-800";
   return (
     <a
-      href={`/blog/${post.slug}`}
+      href={`/blog-detail?slug=${post.slug}`}
       className={`group bg-white rounded-2xl border border-slate-200 hover:border-blue-300 hover:shadow-lg transition-all overflow-hidden flex flex-col ${large ? "lg:flex-row" : ""}`}
     >
       <div className={`relative bg-gradient-to-br ${post.color} ${large ? "lg:w-[55%] aspect-[16/10] lg:aspect-auto" : "aspect-[16/10]"} flex items-center justify-center overflow-hidden`}>
