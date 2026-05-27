@@ -137,6 +137,7 @@ function BlogApp() {
         <BlogGrid />
       </main>
       <SiteFooter />
+      <CallbackWidget />
     </div>
   );
 }

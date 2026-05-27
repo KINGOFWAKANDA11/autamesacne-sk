@@ -223,6 +223,7 @@ function BlogDetailApp() {
         )}
       </main>
       <SiteFooter />
+      <CallbackWidget />
     </div>
   );
 }

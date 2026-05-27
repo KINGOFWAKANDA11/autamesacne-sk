@@ -262,6 +262,7 @@ function KontaktApp() {
         <ContactCalcBanner />
       </main>
       <SiteFooter />
+      <CallbackWidget />
     </div>
   );
 }
