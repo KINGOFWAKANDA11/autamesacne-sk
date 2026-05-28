@@ -70,17 +70,23 @@ function ArticleHeader({ post }) {
 function ArticleCover({ post }) {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 -mt-2">
-      <div className={`relative aspect-[16/9] rounded-3xl bg-gradient-to-br ${post.color} overflow-hidden shadow-xl flex items-center justify-center`}>
-        {post.isVideo ? (
-          <button
-            type="button"
-            className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white/95 hover:bg-white text-blue-900 flex items-center justify-center shadow-2xl transition-all hover:scale-105"
-            aria-label="Prehrať video"
-          >
-            <Play className="w-11 h-11 sm:w-12 sm:h-12 ml-1" />
-          </button>
+      <div className={`relative aspect-[16/9] rounded-3xl overflow-hidden shadow-xl`}>
+        {post.image ? (
+          <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
         ) : (
-          <Car className="w-32 h-32 text-white/40" />
+          <div className={`w-full h-full bg-gradient-to-br ${post.color} flex items-center justify-center`}>
+            {post.isVideo ? (
+              <button
+                type="button"
+                className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white/95 hover:bg-white text-blue-900 flex items-center justify-center shadow-2xl transition-all hover:scale-105"
+                aria-label="Prehrať video"
+              >
+                <Play className="w-11 h-11 sm:w-12 sm:h-12 ml-1" />
+              </button>
+            ) : (
+              <Car className="w-32 h-32 text-white/40" />
+            )}
+          </div>
         )}
       </div>
     </div>

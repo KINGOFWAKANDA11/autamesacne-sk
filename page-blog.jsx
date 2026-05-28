@@ -27,13 +27,19 @@ function PostCard({ post, large = false }) {
       href={`/blog-detail?slug=${post.slug}`}
       className={`group bg-white rounded-2xl border border-slate-200 hover:border-blue-300 hover:shadow-lg transition-all overflow-hidden flex flex-col ${large ? "lg:flex-row" : ""}`}
     >
-      <div className={`relative bg-gradient-to-br ${post.color} ${large ? "lg:w-[55%] aspect-[16/10] lg:aspect-auto" : "aspect-[16/10]"} flex items-center justify-center overflow-hidden`}>
-        {post.isVideo ? (
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/95 text-blue-900 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
-            <Play className="w-7 h-7 sm:w-9 sm:h-9 ml-1" />
-          </div>
+      <div className={`relative ${large ? "lg:w-[55%] aspect-[16/10] lg:aspect-auto" : "aspect-[16/10]"} overflow-hidden`}>
+        {post.image ? (
+          <img src={post.image} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
         ) : (
-          <Car className="w-20 h-20 text-white/60 group-hover:scale-110 transition-transform" />
+          <div className={`w-full h-full bg-gradient-to-br ${post.color} flex items-center justify-center`}>
+            {post.isVideo ? (
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/95 text-blue-900 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
+                <Play className="w-7 h-7 sm:w-9 sm:h-9 ml-1" />
+              </div>
+            ) : (
+              <Car className="w-20 h-20 text-white/60 group-hover:scale-110 transition-transform" />
+            )}
+          </div>
         )}
         <div className={`absolute top-4 left-4 px-3 py-1 rounded-full ${tagColor} text-xs font-bold`}>
           {post.tag}

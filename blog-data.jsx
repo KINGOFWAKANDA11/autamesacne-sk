@@ -16,6 +16,7 @@ const BLOG_POSTS = [
     date: "26. máj 2026",
     readTime: "4 min",
     color: "from-violet-500 to-purple-600",
+    image: "img/blog-5tipov.jpeg",
     isVideo: false,
     featured: true,
   },
@@ -27,6 +28,7 @@ const BLOG_POSTS = [
     date: "22. máj 2026",
     readTime: "5 min",
     color: "from-emerald-500 to-teal-600",
+    image: "img/blog-akontacia.jpeg",
     isVideo: false,
   },
   {
@@ -37,6 +39,7 @@ const BLOG_POSTS = [
     date: "18. máj 2026",
     readTime: "5 min",
     color: "from-blue-500 to-indigo-600",
+    image: "img/blog-leasing-uver.jpeg",
     isVideo: false,
   },
   {
@@ -47,6 +50,7 @@ const BLOG_POSTS = [
     date: "14. máj 2026",
     readTime: "4 min",
     color: "from-sky-500 to-blue-600",
+    image: "img/blog-schvalenie.jpeg",
     isVideo: false,
   },
   {
@@ -57,6 +61,7 @@ const BLOG_POSTS = [
     date: "10. máj 2026",
     readTime: "5 min",
     color: "from-amber-500 to-orange-600",
+    image: "img/blog-vyber-auta.jpeg",
     isVideo: false,
   },
   {
@@ -67,6 +72,7 @@ const BLOG_POSTS = [
     date: "6. máj 2026",
     readTime: "4 min",
     color: "from-rose-500 to-pink-600",
+    image: "img/blog-splatka.jpeg",
     isVideo: false,
   },
   {
@@ -77,6 +83,7 @@ const BLOG_POSTS = [
     date: "2. máj 2026",
     readTime: "5 min",
     color: "from-indigo-500 to-blue-600",
+    image: "img/blog-operativny.jpeg",
     isVideo: false,
   },
   {
@@ -87,6 +94,7 @@ const BLOG_POSTS = [
     date: "28. apríl 2026",
     readTime: "4 min",
     color: "from-cyan-500 to-blue-500",
+    image: "img/blog-preco-splatky.jpeg",
     isVideo: false,
   },
 ];
