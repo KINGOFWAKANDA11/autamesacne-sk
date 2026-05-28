@@ -87,11 +87,12 @@ function ArticleCover({ post }) {
   );
 }
 
-function ArticleBody() {
+function ArticleBody({ post }) {
+  const body = BLOG_BODIES[post.slug] || [];
   return (
     <article className="max-w-3xl mx-auto px-4 sm:px-6 py-16 prose prose-lg prose-slate">
       <div className="space-y-6 text-slate-700 text-lg leading-relaxed">
-        {BLOG_BODY.map((b, i) => {
+        {body.map((b, i) => {
           if (b.type === "p") {
             return <p key={i}>{b.text}</p>;
           }
@@ -217,7 +218,7 @@ function BlogDetailApp() {
           <>
             <ArticleHeader post={post} />
             <ArticleCover post={post} />
-            <ArticleBody />
+            <ArticleBody post={post} />
             <RelatedPosts currentSlug={post.slug} />
           </>
         )}
