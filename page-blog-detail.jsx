@@ -176,13 +176,19 @@ function RelatedPosts({ currentSlug }) {
             const tagColor = TAG_COLORS[p.tag] || "bg-slate-100 text-slate-800";
             return (
               <a key={p.slug} href={`/blog-detail?slug=${p.slug}`} className="group bg-white rounded-2xl border border-slate-200 hover:border-blue-300 hover:shadow-lg transition-all overflow-hidden flex flex-col">
-                <div className={`relative aspect-[16/10] bg-gradient-to-br ${p.color} flex items-center justify-center`}>
-                  {p.isVideo ? (
-                    <div className="w-14 h-14 rounded-full bg-white/95 text-blue-900 flex items-center justify-center">
-                      <Play className="w-6 h-6 ml-0.5" />
-                    </div>
+                <div className="relative aspect-[16/10] overflow-hidden">
+                  {p.image ? (
+                    <img src={p.image} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   ) : (
-                    <Car className="w-14 h-14 text-white/60" />
+                    <div className={`w-full h-full bg-gradient-to-br ${p.color} flex items-center justify-center`}>
+                      {p.isVideo ? (
+                        <div className="w-14 h-14 rounded-full bg-white/95 text-blue-900 flex items-center justify-center">
+                          <Play className="w-6 h-6 ml-0.5" />
+                        </div>
+                      ) : (
+                        <Car className="w-14 h-14 text-white/60" />
+                      )}
+                    </div>
                   )}
                   <div className={`absolute top-4 left-4 px-3 py-1 rounded-full ${tagColor} text-xs font-bold`}>
                     {p.tag}
