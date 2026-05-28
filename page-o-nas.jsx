@@ -49,27 +49,46 @@ function ONasHero() {
 function StoryTimeline() {
   return (
     <section className="bg-white py-20 px-4 sm:px-6">
-      <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-14">
-          <div className="text-xs font-bold uppercase tracking-widest text-blue-700 mb-3">Náš príbeh</div>
+      <div className="max-w-3xl mx-auto">
+        <div className="mb-10">
+          <div className="text-xs font-bold uppercase tracking-widest text-blue-700 mb-3">O nás</div>
           <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
-            Pätnásť rokov na trhu
+            Automesacne.sk
           </h2>
-          <p className="mt-4 text-slate-600 max-w-2xl mx-auto">
-            Začali sme ako malá kancelária. Dnes spolupracujeme so šiestimi leasingovkami a vybavili sme viac ako 800 financovaní.
-          </p>
         </div>
 
-        <ol className="relative border-l-2 border-blue-100 ml-4 sm:ml-10">
-          {TIMELINE.map((t, i) => (
-            <li key={i} className="mb-10 ml-6 sm:ml-10">
-              <div className="absolute -left-[11px] w-5 h-5 rounded-full bg-blue-900 border-4 border-white shadow-md"></div>
-              <div className="text-sm font-bold text-blue-700 mb-1 tabular-nums">{t.year}</div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">{t.title}</h3>
-              <p className="text-slate-600 leading-relaxed">{t.body}</p>
-            </li>
-          ))}
-        </ol>
+        <div className="space-y-6 text-slate-700 text-lg leading-relaxed">
+          <p>
+            Automesacne.sk vzniklo s jednoduchým cieľom pomáhať ľuďom vybaviť financovanie auta čo najjednoduchšie, najrýchlejšie a bez zbytočného stresu. Vieme, že leasing alebo úver býva často komplikovaný, plný papierov a nejasností. Preto sme sa rozhodli robiť to inak, modernejšie, jednoduchšie a hlavne ľudskejšie.
+          </p>
+          <p>
+            Máme viac ako 15 rokov skúseností v oblasti financovania a automotive segmentu. Počas rokov sme pomohli množstvu klientov nájsť správne riešenie pri kúpe auta, od bežných rodinných vozidiel až po firemné autá či drahšie vozidlá.
+          </p>
+          <p>
+            Nie sme len ďalšia anonymná finančná stránka. Ku každému klientovi pristupujeme individuálne a priateľsky. Chceme, aby ste mali pocit, že sa rozprávate s niekým, kto Vám naozaj chce pomôcť a všetko vybaviť za Vás.
+          </p>
+
+          <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100">
+            <div className="text-base font-bold text-slate-900 mb-3">Pomáhame s:</div>
+            <ul className="space-y-2 text-base text-slate-700">
+              <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />leasingom na autá</li>
+              <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />autoúvermi</li>
+              <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />financovaním pre súkromné osoby aj firmy</li>
+              <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />výpočtom mesačných splátok</li>
+              <li className="flex items-start gap-2"><Check className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />hľadaním najlepšieho možného riešenia podľa Vašej situácie</li>
+            </ul>
+          </div>
+
+          <p>
+            Spolupracujeme s viacerými partnermi a bankami, vďaka čomu vieme porovnať viac možností a nájsť riešenie na mieru. Celý proces sa snažíme spraviť čo najjednoduchší, veľa vecí vybavíte online a bez zbytočného behania.
+          </p>
+          <p>
+            Našim cieľom nie je byť „suchá finančná firma". Chceme byť partner, na ktorého sa môžete obrátiť normálne, bez stresu a zbytočne komplikovanej komunikácie.
+          </p>
+          <p className="font-semibold text-slate-900">
+            Automesacne.sk je miesto, kde Vám niekto reálne pomôže dostať sa k autu jednoduchšie.
+          </p>
+        </div>
       </div>
     </section>
   );
@@ -247,7 +266,7 @@ function ONasApp() {
         <ONasHero />
         <StoryTimeline />
         <NumbersInPractice />
-        <TeamSection />
+        {/* <TeamSection /> */}
         <ValuesSection />
         <PartnersOnAbout />
         <LicensesSection />
