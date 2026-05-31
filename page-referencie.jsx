@@ -375,6 +375,7 @@ function VideoTestimonial() {
           <video
             ref={videoRef}
             src="/img/video-recenzia.mp4"
+            poster="/img/video-recenzia-poster.jpg"
             className="w-full aspect-video object-contain"
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoaded}
