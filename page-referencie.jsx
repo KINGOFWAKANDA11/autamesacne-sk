@@ -3,140 +3,162 @@ const { useState: useRState, useMemo: useRMemo } = React;
 
 const REVIEWS = [
   {
-    name: "Martin",
+    name: "Richard",
     city: "Bratislava",
-    car: "Osobné vozidlo",
-    type: "Osobné",
-    partner: "",
+    car: "Lamborghini Huracán",
+    type: "Prémiové",
     date: "Máj 2026",
     rating: 5,
-    text: "Najviac sa mi páčilo, že všetko vysvetlili normálne ľudsky. Nemal som pocit klasického nátlaku ako inde. Auto sme mali vybavené veľmi rýchlo a celý proces bol úplne bez stresu.",
-    color: "from-blue-400 to-indigo-500",
+    photo: "/img/lamborghini.jpg",
+    text: "Vždy som sníval o Lamborghini, ale myslel som si, že financovanie takého auta bude nereálne. Oslovil som viac spoločností a všade som dostal komplikované odpovede alebo vysoké podmienky. Na automesacne.sk sa na moju situáciu pozreli individuálne, všetko mi vysvetlili a nakoniec sa podarilo vybaviť financovanie. Celý proces bol oveľa profesionálnejší a normálnejší, než som čakal.",
+    color: "from-slate-700 to-slate-900",
   },
   {
-    name: "Lucia a Tomáš",
-    city: "Nitra",
-    car: "SUV pre rodinu",
+    name: "Jakub a Simona",
+    city: "Trenčín",
+    car: "Rodinné SUV",
     type: "SUV",
-    partner: "",
     date: "Máj 2026",
     rating: 5,
-    text: "Riešili sme financovanie SUV pre rodinu a boli sme prekvapení, ako jednoducho to celé fungovalo. Pomohli nám vybrať najlepšiu možnosť a splátka nám perfektne sadla.",
-    color: "from-emerald-400 to-teal-500",
+    photo: "/img/mercedes-gle-rodina.jpg",
+    text: "Čakali sme druhé dieťa a staré auto nám už nestačilo. Potrebovali sme väčšie SUV, ale nechceli sme minúť všetky úspory. Financovanie nám nastavili tak, aby sme mali rozumnú mesačnú splátku a zároveň bezpečné auto pre rodinu.",
+    color: "from-blue-600 to-indigo-700",
+  },
+  {
+    name: "Denis",
+    city: "Nitra",
+    car: "BMW M4 Competition",
+    type: "Prémiové",
+    date: "Apríl 2026",
+    rating: 5,
+    photo: "/img/bmw-m4.jpg",
+    text: "Chcel som športové auto, ale nechcel som vložiť veľkú hotovosť naraz. Nakoniec sme nastavili financovanie tak, aby mi zostala aj finančná rezerva.",
+    color: "from-zinc-700 to-zinc-900",
+  },
+  {
+    name: "Tomáš",
+    city: "Žilina",
+    car: "Porsche Cayenne",
+    type: "SUV",
+    date: "Apríl 2026",
+    rating: 5,
+    photo: "/img/porsche-cayenne.jpg",
+    text: "Chcel som reprezentatívne auto na firmu, ale zároveň rozumné mesačné splátky. Celý proces bol rýchly a bez komplikácií.",
+    color: "from-slate-400 to-slate-600",
+  },
+  {
+    name: "Richard Simonics",
+    city: "Nesvady",
+    car: "Buggy z Nemecka",
+    type: "Špeciálne",
+    date: "Apríl 2026",
+    rating: 5,
+    photo: "/img/buggy.jpg",
+    text: "Mojím snom bol poriadny Buggy na leto a dlhšie som hľadal niečo výnimočné. Nakoniec sa podarilo nájsť presne ten model, ktorý som chcel, dokonca ho vedeli zabezpečiť až z Nemecka. Úprimne som čakal komplikácie, ale všetko prebehlo úplne hladko. Celé leto máme o zábavu postarané.",
+    color: "from-green-600 to-emerald-700",
   },
   {
     name: "Marek",
-    city: "Komárno",
-    car: "Osobné vozidlo",
-    type: "Osobné",
-    partner: "",
-    date: "Apríl 2026",
+    city: "Prešov",
+    car: "Dodávka Fiat Ducato",
+    type: "Dodávky",
+    date: "Marec 2026",
     rating: 5,
-    text: "Ako živnostník som mal problém vybaviť financovanie inde. Tu mi všetko vysvetlili, preverili možnosti a nakoniec sme našli riešenie. Veľmi profesionálny ale zároveň ľudský prístup.",
-    color: "from-amber-400 to-orange-500",
+    photo: "/img/dodavka-fiat.jpg",
+    text: "Bez dodávky by som nevedel fungovať. Potreboval som ju rýchlo a nechcel som vybrať všetky peniaze z firmy naraz. Financovanie vybavili bez problémov.",
+    color: "from-blue-700 to-blue-900",
   },
   {
-    name: "Peter",
+    name: "Adrián",
     city: "Trnava",
-    car: "Firemné auto",
-    type: "Osobné",
-    partner: "",
-    date: "Apríl 2026",
+    car: "Audi RS6",
+    type: "Prémiové",
+    date: "Március 2026",
     rating: 5,
-    text: "Potreboval som auto na firmu čo najrýchlejšie. Komunikácia bola super, všetko išlo rýchlo a bez komplikácií. Určite odporúčam každému, kto rieši leasing alebo auto na splátky.",
-    color: "from-rose-400 to-pink-500",
+    photo: "/img/audi-rs6.jpg",
+    text: "RS6 bol môj sen už veľmi dlho. Mal som obavy, či bude možné nastaviť rozumné financovanie, ale nakoniec to vyšlo lepšie, než som čakal.",
+    color: "from-slate-600 to-slate-800",
   },
   {
-    name: "Patrik",
-    city: "Tvrdošovce",
-    car: "Osobné vozidlo",
-    type: "Osobné",
-    partner: "",
-    date: "Apríl 2026",
-    rating: 5,
-    text: "Mal som obavy kvôli staršiemu úveru, ale všetko so mnou normálne prešli a vysvetlili možnosti. Páčilo sa mi, že sa snažili pomôcť namiesto toho, aby ma hneď odmietli.",
-    color: "from-violet-400 to-purple-500",
-  },
-  {
-    name: "Erik",
-    city: "Štúrovo",
-    car: "Osobné vozidlo",
-    type: "Osobné",
-    partner: "",
-    date: "Marec 2026",
-    rating: 5,
-    text: "Veľa firiem sa tvári profesionálne, ale komunikácia býva katastrofa. Tu bolo všetko rýchle, jasné a hlavne ľudské. Presne takto by malo fungovať financovanie auta.",
-    color: "from-cyan-400 to-blue-500",
-  },
-  {
-    name: "Tibor",
-    city: "Veľký Meder",
-    car: "Osobné vozidlo",
-    type: "Osobné",
-    partner: "",
-    date: "Marec 2026",
-    rating: 5,
-    text: "Dochádzam každý deň do práce skoro 40 kilometrov a staré auto už bolo viac v servise ako na ceste. Financovanie som nikdy predtým neriešil, ale celý proces bol jednoduchší, než som čakal.",
-    color: "from-lime-400 to-green-500",
-  },
-  {
-    name: "Andrea",
-    city: "Hurbanovo",
-    car: "Osobné vozidlo",
-    type: "Osobné",
-    partner: "",
+    name: "Michal",
+    city: "Košice",
+    car: "BMW M3 Touring",
+    type: "Prémiové",
     date: "Február 2026",
     rating: 5,
-    text: "Najviac ma prekvapilo, že sa so mnou rozprávali úplne normálne. Žiadny nátlak, žiadne zbytočné sľuby. Všetko mi vysvetlili jednoducho a ľudsky.",
-    color: "from-fuchsia-400 to-pink-500",
+    photo: "/img/bmw-m3-touring.jpg",
+    text: "Chcel som reprezentatívne auto pre podnikanie, ale zároveň rozumné mesačné náklady. Financovanie bolo nastavené presne podľa mojich predstáv.",
+    color: "from-gray-500 to-gray-700",
   },
   {
-    name: "Patrik",
-    city: "Žiar nad Hronom",
-    car: "Motocykel",
+    name: "Samuel",
+    city: "Martin",
+    car: "Motorka BMW GS",
     type: "Motorky",
-    partner: "",
     date: "Február 2026",
     rating: 5,
-    text: "Úprimne som nečakal, že mi schvália financovanie na motorku tak rýchlo. Celý život som chcel silnejší motocykel, ale nechcel som vyplatiť celú sumu naraz. Nakoniec sme všetko vyriešili veľmi jednoducho a dnes už jazdím každé víkendy.",
-    color: "from-sky-400 to-blue-500",
+    photo: "/img/bmw-gs.jpg",
+    text: "Silnejšiu motorku som chcel už roky, ale stále boli dôležitejšie výdavky. Nakoniec som sa rozhodol riešiť financovanie a všetko prebehlo veľmi rýchlo. Páčilo sa mi, že komunikácia bola normálna a bez zbytočného nátlaku.",
+    color: "from-zinc-600 to-zinc-800",
   },
   {
-    name: "Róbert",
-    city: "Trebišov",
-    car: "Pracovný stroj",
-    type: "Dodávky",
-    partner: "",
-    date: "Január 2026",
-    rating: 5,
-    text: "Potreboval som pracovný stroj do firmy a myslel som si, že financovanie bude komplikované. Nakoniec mi všetko vysvetlili, pripravili možnosti a vybavili financovanie bez zbytočných problémov.",
-    color: "from-orange-400 to-amber-500",
-  },
-  {
-    name: "Milan",
+    name: "Lukáš",
     city: "Senica",
-    car: "Motocykel",
+    car: "Yamaha MT-07",
     type: "Motorky",
-    partner: "",
-    date: "Január 2026",
+    date: "Február 2026",
     rating: 5,
-    text: "Syn si dlho šetril na motorku a nakoniec sme sa rozhodli riešiť to cez splátky. Celé vybavenie bolo rýchle a bez stresu.",
-    color: "from-green-400 to-emerald-500",
+    photo: "/img/yamaha-mt07.jpg",
+    text: "Motorka bol môj dlhoročný sen. Financovanie bolo jednoduchšie, než som si myslel. Veľmi sa mi páčil normálny prístup bez nátlaku.",
+    color: "from-slate-300 to-slate-500",
   },
   {
-    name: "Peter",
-    city: "Michalovce",
-    car: "Pracovný stroj",
+    name: "Ladislav Papp",
+    city: "Modrany",
+    car: "Nissan Navara",
     type: "Dodávky",
-    partner: "",
+    date: "Január 2026",
+    rating: 5,
+    photo: "/img/nissan-navara.jpg",
+    text: "Do našej betónovej firmy sme potrebovali spoľahlivé pracovné auto. Aj keď išlo o staršiu Nissan Navara z roku 2010, podarilo sa vybaviť veľmi dobré financovanie s rozumnou mesačnou splátkou. Za pár dní bolo všetko vybavené.",
+    color: "from-slate-200 to-slate-400",
+  },
+  {
+    name: "Jozef",
+    city: "Humenné",
+    car: "Minibager JCB",
+    type: "Pracovné stroje",
+    date: "Január 2026",
+    rating: 5,
+    photo: "/img/jcb-bager.jpg",
+    text: "Potrebovali sme nový minibager, pretože bez techniky dnes firma nevie fungovať. Myslel som si, že vybaviť financovanie na pracovný stroj bude komplikované, ale nakoniec to išlo oveľa jednoduchšie.",
+    color: "from-yellow-500 to-amber-600",
+  },
+  {
+    name: "Štefan",
+    city: "Rimavská Sobota",
+    car: "Traktor John Deere",
+    type: "Pracovné stroje",
     date: "December 2025",
     rating: 5,
-    text: "Najviac oceňujem, že neriešia len autá. Pomohli mi vybaviť financovanie na pracovný stroj do firmy a celý proces bol oveľa jednoduchší, než som čakal.",
-    color: "from-pink-400 to-rose-500",
+    photo: "/img/traktor.jpg",
+    text: "Potrebovali sme novší traktor, pretože starý už nestačil. Veľmi nám pomohlo, že sme nemuseli zaplatiť všetko naraz. Celý proces prebehol rýchlo a profesionálne.",
+    color: "from-green-700 to-green-900",
+  },
+  {
+    name: "Filip a Viktória",
+    city: "Zvolen",
+    car: "Osobné vozidlo",
+    type: "Osobné",
+    date: "November 2025",
+    rating: 5,
+    photo: "/img/vw-tiguan.jpg",
+    text: "Obaja sme pracovali, ale nemali sme našetrené desaťtisíce eur. Financovanie nám veľmi pomohlo a dnes máme spoľahlivé auto do práce aj na cestovanie.",
+    color: "from-teal-500 to-teal-700",
   },
 ];
 
-const FILTERS = ["Všetky", "Osobné", "SUV", "Dodávky", "Motorky"];
+const FILTERS = ["Všetky", "Osobné", "SUV", "Prémiové", "Dodávky", "Motorky", "Pracovné stroje", "Špeciálne"];
 
 function ReferencieHero() {
   return (
@@ -193,8 +215,11 @@ function ReviewsGrid() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map((r, i) => (
             <article key={i} className="bg-white rounded-2xl border border-slate-200 p-6 hover:border-blue-300 hover:shadow-lg transition-all flex flex-col">
-              <div className={`w-full h-32 rounded-xl bg-gradient-to-br ${r.color} flex items-center justify-center mb-5 relative overflow-hidden`}>
-                <Car className="w-16 h-16 text-white/80" />
+              <div className={`w-full h-40 rounded-xl overflow-hidden mb-5 relative ${!r.photo ? `bg-gradient-to-br ${r.color} flex items-center justify-center` : ''}`}>
+                {r.photo
+                  ? <img src={r.photo} alt={r.car} className="w-full h-full object-cover" />
+                  : <Car className="w-16 h-16 text-white/80" />
+                }
                 <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/95 text-xs font-bold text-slate-800">
                   {r.type}
                 </div>
@@ -241,15 +266,15 @@ function ReviewsGrid() {
 }
 
 function GallerySection() {
-  const cards = [
-    { from: "from-blue-500", to: "to-indigo-600", label: "Škoda" },
-    { from: "from-emerald-500", to: "to-teal-600", label: "VW" },
-    { from: "from-amber-500", to: "to-orange-600", label: "BMW" },
-    { from: "from-rose-500", to: "to-pink-600", label: "Ford" },
-    { from: "from-violet-500", to: "to-purple-600", label: "Honda" },
-    { from: "from-cyan-500", to: "to-blue-600", label: "Hyundai" },
-    { from: "from-lime-500", to: "to-green-600", label: "Renault" },
-    { from: "from-fuchsia-500", to: "to-pink-600", label: "Audi" },
+  const photos = [
+    { src: "/img/lamborghini.jpg", label: "Lamborghini Huracán" },
+    { src: "/img/porsche-cayenne.jpg", label: "Porsche Cayenne" },
+    { src: "/img/bmw-m4.jpg", label: "BMW M4 Competition" },
+    { src: "/img/audi-rs6.jpg", label: "Audi RS6" },
+    { src: "/img/bmw-m3-touring.jpg", label: "BMW M3 Touring" },
+    { src: "/img/mercedes-gle-rodina.jpg", label: "Mercedes GLE" },
+    { src: "/img/dodavka-fiat.jpg", label: "Fiat Ducato" },
+    { src: "/img/buggy.jpg", label: "Buggy" },
   ];
   return (
     <section className="bg-slate-50 py-20 px-4 sm:px-6 border-y border-slate-100">
@@ -260,12 +285,12 @@ function GallerySection() {
           <p className="mt-3 text-slate-600 max-w-2xl mx-auto">Výber z posledných mesiacov. Osobné, SUV, dodávky aj motorky.</p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {cards.map((c, i) => (
-            <div key={i} className={`aspect-[4/3] rounded-2xl bg-gradient-to-br ${c.from} ${c.to} relative overflow-hidden flex items-center justify-center group cursor-pointer`}>
-              <Car className="w-20 h-20 text-white/70 group-hover:scale-110 transition-transform" />
-              <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between text-white">
-                <span className="font-bold text-lg">{c.label}</span>
-                <Search className="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" />
+          {photos.map((p, i) => (
+            <div key={i} className="aspect-[4/3] rounded-2xl overflow-hidden relative group cursor-pointer">
+              <img src={p.src} alt={p.label} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute bottom-3 left-3 right-3 text-white font-bold text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                {p.label}
               </div>
             </div>
           ))}
@@ -276,27 +301,152 @@ function GallerySection() {
 }
 
 function VideoTestimonial() {
+  const videoRef = React.useRef(null);
+  const [playing, setPlaying] = React.useState(false);
+  const [progress, setProgress] = React.useState(0);
+  const [duration, setDuration] = React.useState(0);
+  const [muted, setMuted] = React.useState(false);
+  const [showControls, setShowControls] = React.useState(true);
+  const hideTimer = React.useRef(null);
+
+  const formatTime = (s) => {
+    if (!s || isNaN(s)) return "0:00";
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return `${m}:${sec.toString().padStart(2, "0")}`;
+  };
+
+  const togglePlay = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) { v.play(); setPlaying(true); }
+    else { v.pause(); setPlaying(false); }
+  };
+
+  const handleTimeUpdate = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    setProgress(v.currentTime);
+  };
+
+  const handleLoaded = () => {
+    const v = videoRef.current;
+    if (v) setDuration(v.duration);
+  };
+
+  const handleSeek = (e) => {
+    const v = videoRef.current;
+    if (!v || !duration) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const ratio = (e.clientX - rect.left) / rect.width;
+    v.currentTime = ratio * duration;
+  };
+
+  const handleEnded = () => setPlaying(false);
+
+  const resetHideTimer = () => {
+    setShowControls(true);
+    clearTimeout(hideTimer.current);
+    if (playing) {
+      hideTimer.current = setTimeout(() => setShowControls(false), 3000);
+    }
+  };
+
+  React.useEffect(() => {
+    if (!playing) { setShowControls(true); clearTimeout(hideTimer.current); }
+    else resetHideTimer();
+    return () => clearTimeout(hideTimer.current);
+  }, [playing]);
+
   return (
     <section className="bg-white py-20 px-4 sm:px-6">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <div className="text-xs font-bold uppercase tracking-widest text-blue-700 mb-3">Video príbeh</div>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900">Marek, klient z Bratislavy</h2>
-          <p className="mt-3 text-slate-600">Ako prebiehalo financovanie krok za krokom. (Doplníme reálne video.)</p>
+          <div className="text-xs font-bold uppercase tracking-widest text-blue-700 mb-3">Video recenzia</div>
+          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900">Klient hovorí za seba</h2>
+          <p className="mt-3 text-slate-600">Skutočná skúsenosť z financovania auta cez AutoMesacne.sk.</p>
         </div>
-        <div className="relative aspect-video rounded-3xl overflow-hidden bg-gradient-to-br from-blue-900 to-blue-700 shadow-xl">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <button
-              type="button"
-              className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white/95 hover:bg-white text-blue-900 flex items-center justify-center shadow-2xl transition-all hover:scale-105"
-              aria-label="Prehrať video"
+
+        <div
+          className="relative rounded-3xl overflow-hidden bg-black shadow-2xl group"
+          onMouseMove={resetHideTimer}
+          onMouseLeave={() => { if (playing) setShowControls(false); }}
+        >
+          <video
+            ref={videoRef}
+            src="/img/video-recenzia.mp4"
+            className="w-full aspect-video object-contain"
+            onTimeUpdate={handleTimeUpdate}
+            onLoadedMetadata={handleLoaded}
+            onEnded={handleEnded}
+            onClick={togglePlay}
+            muted={muted}
+            playsInline
+          />
+
+          {/* play overlay — visible when paused */}
+          {!playing && (
+            <div
+              className="absolute inset-0 flex items-center justify-center bg-black/30 cursor-pointer"
+              onClick={togglePlay}
             >
-              <Play className="w-9 h-9 sm:w-11 sm:h-11 ml-1" />
-            </button>
-          </div>
-          <div className="absolute bottom-6 left-6 right-6 text-white">
-            <div className="text-xs font-bold uppercase tracking-widest text-blue-200 mb-1">Klient · 02:14</div>
-            <div className="text-xl font-bold">"Vybavili mi auto za jeden deň. Bez papierovania, bez stresu."</div>
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white/95 hover:bg-white text-blue-900 flex items-center justify-center shadow-2xl transition-all hover:scale-105">
+                <Play className="w-9 h-9 sm:w-11 sm:h-11 ml-1" />
+              </div>
+            </div>
+          )}
+
+          {/* controls bar */}
+          <div
+            className={`absolute bottom-0 left-0 right-0 px-5 pb-4 pt-8 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-300 ${showControls ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+          >
+            {/* progress bar */}
+            <div
+              className="w-full h-1.5 bg-white/30 rounded-full mb-4 cursor-pointer"
+              onClick={handleSeek}
+            >
+              <div
+                className="h-full bg-white rounded-full"
+                style={{ width: duration ? `${(progress / duration) * 100}%` : "0%" }}
+              />
+            </div>
+
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={togglePlay}
+                className="text-white hover:text-blue-300 transition-colors"
+                aria-label={playing ? "Pozastaviť" : "Prehrať"}
+              >
+                {playing
+                  ? <Pause className="w-6 h-6" />
+                  : <Play className="w-6 h-6 ml-0.5" />
+                }
+              </button>
+
+              <span className="text-white/80 text-sm tabular-nums">
+                {formatTime(progress)} / {formatTime(duration)}
+              </span>
+
+              <div className="flex-1" />
+
+              <button
+                type="button"
+                onClick={() => {
+                  const v = videoRef.current;
+                  if (!v) return;
+                  v.muted = !v.muted;
+                  setMuted(v.muted);
+                }}
+                className="text-white hover:text-blue-300 transition-colors"
+                aria-label={muted ? "Zapnúť zvuk" : "Vypnúť zvuk"}
+              >
+                {muted
+                  ? <VolumeX className="w-5 h-5" />
+                  : <Volume2 className="w-5 h-5" />
+                }
+              </button>
+            </div>
           </div>
         </div>
       </div>

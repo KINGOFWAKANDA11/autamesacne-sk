@@ -275,10 +275,34 @@ const Share2 = (props) => (
   </Icon>
 );
 
+const Pause = (props) => (
+  <Icon {...props}>
+    <rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none" />
+    <rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none" />
+  </Icon>
+);
+
+const Volume2 = (props) => (
+  <Icon {...props}>
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+    <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+  </Icon>
+);
+
+const VolumeX = (props) => (
+  <Icon {...props}>
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+    <line x1="23" y1="9" x2="17" y2="15" />
+    <line x1="17" y1="9" x2="23" y2="15" />
+  </Icon>
+);
+
 Object.assign(window, {
   CheckCircle2, Clock, ShieldCheck, FileSignature, Car, Phone, Mail,
   ArrowRight, ArrowLeft, ChevronDown, ChevronRight, ChevronLeft,
   Calculator, Sparkles, Briefcase, Globe, Building2, Building,
   Star, StarFilled, Check, MessageCircle, MapPin, Tag, Play, Search,
   Users, Award, Target, HeartHandshake, Calendar, Share2,
+  Pause, Volume2, VolumeX,
 });
