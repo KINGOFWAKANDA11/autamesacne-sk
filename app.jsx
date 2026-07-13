@@ -18,11 +18,28 @@ const paymentExamples = [
   { car: "BMW radu 3", year: 2021, price: 32000, payment: 320, months: 84 },
 ];
 
-// TODO: replace placeholder testimonials with real ones from production
 const testimonials = [
-  { text: "Vybavili mi leasing na auto z bazáru za necelý deň. Profi prístup.", name: "Marek K.", city: "Bratislava" },
-  { text: "Žiadne zbytočné papierovanie. Všetko online, super skúsenosť.", name: "Jana B.", city: "Trnava" },
-  { text: "Splátka aj bez akontácie, presne ako sľubovali. Odporúčam.", name: "Tomáš H.", city: "Žilina" },
+  {
+    text: "Vždy som sníval o Lamborghini, ale myslel som si, že financovanie takého auta bude nereálne. Nakoniec sa podarilo. Celý proces bol oveľa profesionálnejší a normálnejší, než som čakal.",
+    name: "Richard",
+    city: "Bratislava",
+    car: "Lamborghini Huracán",
+    photo: "/img/lamborghini.jpg",
+  },
+  {
+    text: "Čakali sme druhé dieťa a staré auto nám nestačilo. Financovanie nám nastavili tak, aby sme mali rozumnú splátku a zároveň bezpečné auto pre rodinu.",
+    name: "Jakub a Simona",
+    city: "Trenčín",
+    car: "Rodinné SUV",
+    photo: "/img/mercedes-gle-rodina.jpg",
+  },
+  {
+    text: "Mojím snom bol poriadny Buggy a podarilo sa ho zabezpečiť až z Nemecka. Úprimne som čakal komplikácie, ale všetko prebehlo úplne hladko.",
+    name: "Richard Simonics",
+    city: "Nesvady",
+    car: "Buggy",
+    photo: "/img/buggy.jpg",
+  },
 ];
 
 const steps = [
@@ -329,22 +346,35 @@ function SocialProof() {
           ))}
         </div>
 
-        {/* TODO: replace placeholder testimonials with real ones from production */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-14">
           {testimonials.map((t, i) => (
-            <div key={i} className="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
-              <div className="flex gap-0.5 text-amber-400 mb-3">
-                {[0, 1, 2, 3, 4].map((j) => (
-                  <StarFilled key={j} className="w-4 h-4" />
-                ))}
-              </div>
-              <p className="text-slate-700 leading-relaxed">"{t.text}"</p>
-              <div className="mt-4 pt-4 border-t border-slate-100 text-sm">
-                <span className="font-semibold text-slate-900">{t.name}</span>
-                <span className="text-slate-500">, {t.city}</span>
+            <div key={i} className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+              {t.photo && (
+                <div className="h-44 overflow-hidden">
+                  <img src={t.photo} alt={t.car} className="w-full h-full object-cover" />
+                </div>
+              )}
+              <div className="p-6">
+                <div className="flex gap-0.5 text-amber-400 mb-3">
+                  {[0, 1, 2, 3, 4].map((j) => (
+                    <StarFilled key={j} className="w-4 h-4" />
+                  ))}
+                </div>
+                <p className="text-slate-700 leading-relaxed">"{t.text}"</p>
+                <div className="mt-4 pt-4 border-t border-slate-100 text-sm">
+                  <span className="font-semibold text-slate-900">{t.name}</span>
+                  <span className="text-slate-500">, {t.city}</span>
+                  {t.car && <div className="text-xs text-slate-400 mt-0.5">{t.car}</div>}
+                </div>
               </div>
             </div>
           ))}
+        </div>
+        <div className="text-center mt-10">
+          <a href="/referencie" className="inline-flex items-center gap-2 text-blue-900 font-semibold text-sm hover:underline">
+            Zobraziť všetky referencie
+            <ArrowRight className="w-4 h-4" />
+          </a>
         </div>
       </div>
     </section>

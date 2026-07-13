@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Koncept A: Night Drive — AutoMesacne.sk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0C10;
+    --bg-panel: #12151C;
+    --bg-card: #161A23;
+    --line: rgba(255,255,255,0.09);
+    --ink: #F2F4F8;
+    --ink-2: #A8B0BF;
+    --ink-3: #6B7382;
+    --accent: #3D7BFF;
+    --accent-2: #6EA8FF;
+    --accent-soft: rgba(61,123,255,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, .display { font-family: 'Space Grotesk', sans-serif; }
+  .container { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,12,16,0.8);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+  .nav-logo { height: 34px; }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a { color: var(--ink-2); text-decoration: none; font-size: 15px; font-weight: 500; transition: color .2s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--ink); }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff; border: none; cursor: pointer;
+    font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600;
+    padding: 13px 26px; border-radius: 12px; text-decoration: none;
+    box-shadow: 0 4px 24px rgba(61,123,255,0.35);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 32px rgba(61,123,255,0.5); }
+  .btn-lg { padding: 16px 32px; font-size: 16px; border-radius: 14px; width: 100%; justify-content: center; }
+
+  /* HERO */
+  .hero { position: relative; overflow: hidden; }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background-image: url('../img/bmw-m4.jpg');
+    background-size: cover; background-position: 70% center;
+    filter: saturate(0.85);
+  }
+  .hero-bg::after {
+    content: ''; position: absolute; inset: 0;
+    background:
+      linear-gradient(90deg, var(--bg) 0%, rgba(10,12,16,0.92) 42%, rgba(10,12,16,0.55) 70%, rgba(10,12,16,0.35) 100%),
+      linear-gradient(0deg, var(--bg) 0%, rgba(10,12,16,0.2) 25%);
+  }
+  .hero-inner {
+    position: relative; z-index: 1;
+    display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 64px;
+    padding: 88px 0 96px; align-items: center;
+  }
+  .badge-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.02em;
+    color: var(--ink-2);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--line);
+    padding: 7px 14px; border-radius: 100px;
+  }
+  .badge .stars { color: #FFC53D; letter-spacing: 2px; font-size: 12px; }
+  .hero h1 {
+    font-size: clamp(40px, 5.2vw, 68px);
+    font-weight: 700; line-height: 1.05; letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+  .hero h1 .accent {
+    background: linear-gradient(135deg, var(--accent-2), var(--accent));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero .lead { font-size: 18px; color: var(--ink-2); max-width: 480px; margin-bottom: 32px; }
+  .hero .lead strong { color: var(--ink); font-weight: 600; }
+  .usp-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px; max-width: 480px; margin-bottom: 40px; }
+  .usp-list li { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; color: var(--ink); }
+  .usp-list svg { flex-shrink: 0; }
+  .trust-row { display: flex; gap: 40px; }
+  .trust-item .num { font-family: 'Space Grotesk'; font-size: 28px; font-weight: 700; color: var(--ink); }
+  .trust-item .lbl { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+
+  /* CALCULATOR */
+  .calc {
+    background: rgba(22,26,35,0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+  }
+  .calc-head { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+  .calc-head .icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--accent-soft); color: var(--accent-2);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .calc-head h3 { font-size: 19px; font-weight: 700; }
+  .calc-head p { font-size: 13px; color: var(--ink-3); }
+  .calc-row { margin-bottom: 24px; }
+  .calc-row-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+  .calc-row-head label { font-size: 14px; font-weight: 500; color: var(--ink-2); }
+  .calc-row-head output { font-family: 'Space Grotesk'; font-size: 20px; font-weight: 700; }
+  input[type=range] {
+    width: 100%; appearance: none; -webkit-appearance: none; height: 6px; border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent) var(--fill, 50%), rgba(255,255,255,0.12) var(--fill, 50%));
+    outline: none; cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    appearance: none; -webkit-appearance: none;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: #fff; border: 3px solid var(--accent);
+    box-shadow: 0 2px 12px rgba(61,123,255,0.6);
+  }
+  .calc-result {
+    background: linear-gradient(135deg, rgba(61,123,255,0.16), rgba(110,168,255,0.08));
+    border: 1px solid rgba(61,123,255,0.3);
+    border-radius: 16px; padding: 20px 24px; margin-bottom: 20px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .calc-result .lbl { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); }
+  .calc-result .val { font-family: 'Space Grotesk'; font-size: 40px; font-weight: 700; line-height: 1; }
+  .calc-result .val small { font-size: 16px; font-weight: 500; color: var(--ink-2); }
+  .calc-note { font-size: 12px; color: var(--ink-3); text-align: center; margin-top: 14px; }
+
+  /* SECTIONS */
+  section { padding: 96px 0; }
+  .sec-head { max-width: 560px; margin-bottom: 56px; }
+  .sec-head .kicker {
+    font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent-2); margin-bottom: 14px; display: block;
+  }
+  .sec-head h2 { font-size: clamp(30px, 3.6vw, 44px); font-weight: 700; letter-spacing: -0.01em; line-height: 1.15; margin-bottom: 16px; }
+  .sec-head p { color: var(--ink-2); font-size: 17px; }
+
+  /* CAR CARDS */
+  .cars-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .car-card {
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: 20px;
+    overflow: hidden; transition: transform .25s ease, box-shadow .25s ease, border-color .25s;
+  }
+  .car-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.45); border-color: rgba(61,123,255,0.4); }
+  .car-photo { position: relative; aspect-ratio: 16/10; overflow: hidden; }
+  .car-photo img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s ease; }
+  .car-card:hover .car-photo img { transform: scale(1.04); }
+  .car-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(22,26,35,0.9) 0%, transparent 40%); }
+  .car-tag {
+    position: absolute; top: 14px; left: 14px; z-index: 2;
+    font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px;
+    background: rgba(10,12,16,0.7); backdrop-filter: blur(8px); border: 1px solid var(--line);
+  }
+  .car-name { position: absolute; bottom: 14px; left: 18px; z-index: 2; }
+  .car-name h3 { font-size: 20px; font-weight: 700; }
+  .car-name span { font-size: 13px; color: var(--ink-2); }
+  .car-body { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+  .car-price .lbl { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+  .car-price .val { font-size: 15px; font-weight: 600; }
+  .car-monthly { text-align: right; }
+  .car-monthly .val { font-family: 'Space Grotesk'; font-size: 26px; font-weight: 700; color: var(--accent-2); }
+  .car-monthly .lbl { font-size: 12px; color: var(--ink-3); }
+
+  /* PROOF */
+  .proof { background: var(--bg-panel); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .proof-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 64px; align-items: center; }
+  .proof-photo { border-radius: 24px; overflow: hidden; position: relative; }
+  .proof-photo img { width: 100%; display: block; }
+  .proof q { font-family: 'Space Grotesk'; font-size: clamp(22px, 2.4vw, 30px); font-weight: 500; line-height: 1.4; display: block; margin-bottom: 24px; quotes: '\201E' '\201C'; }
+  .proof .who { display: flex; align-items: center; gap: 14px; }
+  .proof .who .stars { color: #FFC53D; letter-spacing: 3px; }
+  .proof .who strong { display: block; font-size: 15px; }
+  .proof .who span { font-size: 13px; color: var(--ink-3); }
+  .footer-note { text-align: center; padding: 40px 24px; color: var(--ink-3); font-size: 13px; }
+
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 40px; padding: 56px 0 64px; }
+    .cars-grid { grid-template-columns: 1fr; }
+    .proof-grid { grid-template-columns: 1fr; gap: 32px; }
+    .nav-links { display: none; }
+    section { padding: 64px 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-inner">
+    <img src="../logo-white.png" alt="AutoMesacne.sk" class="nav-logo">
+    <ul class="nav-links">
+      <li><a href="#" class="active">Domov</a></li>
+      <li><a href="#">Referencie</a></li>
+      <li><a href="#">Blog</a></li>
+      <li><a href="#">O nás</a></li>
+      <li><a href="#">Kontakt</a></li>
+    </ul>
+    <a href="#" class="btn">Získať ponuku</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="container hero-inner">
+    <div>
+      <div class="badge-row">
+        <span class="badge"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4,9 / 5 &middot; 800+ klientov</span>
+        <span class="badge">Schválenie do 24 hodín</span>
+      </div>
+      <h1>Vyhliadnite si auto.<br><span class="accent">My ho zaplatíme.</span></h1>
+      <p class="lead">Pošlite link na akékoľvek auto z Autobazáru, Bazoša aj od súkromníka. <strong>Ponuku financovania máte do 24 hodín</strong>, aj bez akontácie.</p>
+      <ul class="usp-list">
+        <li><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#3D7BFF" stroke-width="1.5"/><path d="M6 10.2l2.6 2.6L14 7.4" stroke="#6EA8FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Aj bez akontácie</li>
+        <li><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#3D7BFF" stroke-width="1.5"/><path d="M6 10.2l2.6 2.6L14 7.4" stroke="#6EA8FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Online podpis zmluvy</li>
+        <li><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#3D7BFF" stroke-width="1.5"/><path d="M6 10.2l2.6 2.6L14 7.4" stroke="#6EA8FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Bez zbytočných papierov</li>
+        <li><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#3D7BFF" stroke-width="1.5"/><path d="M6 10.2l2.6 2.6L14 7.4" stroke="#6EA8FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>6 leasing partnerov</li>
+      </ul>
+      <div class="trust-row">
+        <div class="trust-item"><div class="num">800+</div><div class="lbl">Klientov</div></div>
+        <div class="trust-item"><div class="num">24 h</div><div class="lbl">Schválenie</div></div>
+        <div class="trust-item"><div class="num">15+</div><div class="lbl">Rokov skúseností</div></div>
+      </div>
+    </div>
+
+    <div class="calc">
+      <div class="calc-head">
+        <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="2.5" width="16" height="19" rx="2.5"/><path d="M8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/></svg></div>
+        <div>
+          <h3>Vaša mesačná splátka</h3>
+          <p>Posuňte slidery podľa vašej predstavy</p>
+        </div>
+      </div>
+      <div class="calc-row">
+        <div class="calc-row-head"><label>Cena vozidla</label><output id="out-price">15 000 &euro;</output></div>
+        <input type="range" id="in-price" min="3000" max="100000" step="500" value="15000">
+      </div>
+      <div class="calc-row">
+        <div class="calc-row-head"><label>Akontácia</label><output id="out-down">20 %</output></div>
+        <input type="range" id="in-down" min="0" max="50" step="5" value="20">
+      </div>
+      <div class="calc-row">
+        <div class="calc-row-head"><label>Doba splácania</label><output id="out-months">60 mes.</output></div>
+        <input type="range" id="in-months" min="12" max="96" step="12" value="60">
+      </div>
+      <div class="calc-result">
+        <div class="lbl">Orientačná<br>splátka</div>
+        <div class="val">od <span id="out-monthly">216</span> &euro; <small>/ mes.</small></div>
+      </div>
+      <a href="#" class="btn btn-lg">Pokračovať k žiadosti &rarr;</a>
+      <p class="calc-note">Orientačný výpočet. Reálna splátka závisí od vášho profilu a partnera.</p>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="container">
+    <div class="sec-head">
+      <span class="kicker">Príklady splátok</span>
+      <h2>Reálne autá, reálne splátky</h2>
+      <p>Ilustračné prepočty pri 20 % akontácii. Vaša ponuka môže byť výhodnejšia.</p>
+    </div>
+    <div class="cars-grid">
+      <article class="car-card">
+        <div class="car-photo">
+          <span class="car-tag">Osobné</span>
+          <img src="../img/vw-tiguan.jpg" alt="VW Tiguan">
+          <div class="car-name"><h3>VW Tiguan</h3><span>Ročník 2019</span></div>
+        </div>
+        <div class="car-body">
+          <div class="car-price"><div class="lbl">Cena vozidla</div><div class="val">24 500 &euro;</div></div>
+          <div class="car-monthly"><div class="val">od 265 &euro;</div><div class="lbl">84 mesiacov</div></div>
+        </div>
+      </article>
+      <article class="car-card">
+        <div class="car-photo">
+          <span class="car-tag">Prémiové</span>
+          <img src="../img/bmw-m3-touring.jpg" alt="BMW M3 Touring">
+          <div class="car-name"><h3>BMW M3 Touring</h3><span>Ročník 2021</span></div>
+        </div>
+        <div class="car-body">
+          <div class="car-price"><div class="lbl">Cena vozidla</div><div class="val">82 900 &euro;</div></div>
+          <div class="car-monthly"><div class="val">od 899 &euro;</div><div class="lbl">84 mesiacov</div></div>
+        </div>
+      </article>
+      <article class="car-card">
+        <div class="car-photo">
+          <span class="car-tag">SUV</span>
+          <img src="../img/porsche-cayenne.jpg" alt="Porsche Cayenne">
+          <div class="car-name"><h3>Porsche Cayenne</h3><span>Ročník 2020</span></div>
+        </div>
+        <div class="car-body">
+          <div class="car-price"><div class="lbl">Cena vozidla</div><div class="val">54 900 &euro;</div></div>
+          <div class="car-monthly"><div class="val">od 599 &euro;</div><div class="lbl">72 mesiacov</div></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="proof">
+  <div class="container proof-grid">
+    <div class="proof-photo"><img src="../img/mercedes-gle-rodina.jpg" alt="Spokojní klienti s novým Mercedesom"></div>
+    <div>
+      <span class="kicker" style="font-size:13px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent-2);margin-bottom:14px;display:block;">Skutoční klienti</span>
+      <q>Auto sme si vybrali v sobotu, v pondelok bolo schválené financovanie a v stredu sme si ho prevzali. Žiadne behanie po pobočkách.</q>
+      <div class="who">
+        <div>
+          <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <strong>Rodina Kováčová</strong>
+          <span>Mercedes GLE &middot; Bratislava</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<p class="footer-note">Koncept A &middot; Night Drive &middot; návrh redesignu pre AutoMesacne.sk</p>
+
+<script>
+  const price = document.getElementById('in-price');
+  const down = document.getElementById('in-down');
+  const months = document.getElementById('in-months');
+  const fmt = n => n.toLocaleString('sk-SK');
+  function paint(el) {
+    const pct = (el.value - el.min) / (el.max - el.min) * 100;
+    el.style.setProperty('--fill', pct + '%');
+  }
+  function update() {
+    [price, down, months].forEach(paint);
+    document.getElementById('out-price').innerHTML = fmt(+price.value) + ' &euro;';
+    document.getElementById('out-down').textContent = down.value + ' %';
+    document.getElementById('out-months').textContent = months.value + ' mes.';
+    const principal = price.value * (1 - down.value / 100);
+    const r = 0.089 / 12;
+    const n = +months.value;
+    const m = principal * r / (1 - Math.pow(1 + r, -n));
+    document.getElementById('out-monthly').textContent = Math.round(m);
+  }
+  [price, down, months].forEach(el => el.addEventListener('input', update));
+  update();
+</script>
+</body>
+</html>

@@ -28,6 +28,7 @@ function KontaktHero() {
 
 function ContactInfoCard() {
   const items = [
+    { Icon: Phone, label: "Telefón", value: "0950 840 857", href: "tel:0950840857" },
     { Icon: Mail, label: "Email", value: "info@automesacne.sk", href: "mailto:info@automesacne.sk" },
     { Icon: Clock, label: "Otváracie hodiny", value: "Po-Pi 8:00 až 17:00" },
     { Icon: MapPin, label: "Adresa", value: "Hlavná 571/124, 946 32 Marcelová" },

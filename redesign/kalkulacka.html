@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalkulačka splátky a žiadosť · AutoMesacne.sk</title>
+<meta name="description" content="Vypočítajte si mesačnú splátku auta a pošlite žiadosť o financovanie online. Ponuku máte do 24 hodín, bez záväzkov.">
+<link rel="canonical" href="https://automesacne.sk/kalkulacka.html">
+<link rel="icon" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/base.css?v=20260709">
+<style>
+  .calcform-grid { display: grid; grid-template-columns: 430px 1fr; gap: 32px; align-items: start; }
+  .calcform-grid .calc { position: sticky; top: 100px; margin: 20px 0 0; width: auto; max-width: none; }
+  @media (max-width: 1060px) { .calcform-grid { grid-template-columns: 1fr; } .calcform-grid .calc { position: static; max-width: 460px; margin: 20px auto 0; } }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="cursor-dot"></div><div class="cursor-ring"></div>
+
+<nav class="site-nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="brand"><img src="img/logo-icon.svg" alt="AutoMesacne.sk"><span class="brand-txt"><span class="brand-name">AUTOMESAČNE<span class="tld">.sk</span></span><span class="brand-tag">FINANCOVANIE ÁUT JEDNODUCHO A RÝCHLO</span></span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Domov</a></li>
+      <li><a href="kalkulacka.html" class="nav-hl active">Kalkulačka a žiadosť</a></li>
+      <li><a href="referencie.html">Referencie</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="o-nas.html">O nás</a></li>
+      <li><a href="kontakt.html">Kontakt</a></li>
+    </ul>
+    <div class="nav-right"><a href="tel:0950840857" class="nav-phone"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8 10a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"/></svg>0950 840 857</a><a href="#wizard" class="btn">Získať ponuku</a><button class="nav-burger" aria-label="Menu"><i></i><i></i><i></i></button></div>
+  </div>
+</nav>
+
+<div class="mobile-menu">
+  <a href="index.html">Domov</a>
+  <a href="kalkulacka.html" class="nav-hl active">Kalkulačka a žiadosť</a>
+  <a href="referencie.html">Referencie</a>
+  <a href="blog.html">Blog</a>
+  <a href="o-nas.html">O nás</a>
+  <a href="kontakt.html">Kontakt</a>
+  <a href="tel:0950840857" class="mm-phone">0950 840 857</a>
+</div>
+
+<header class="page-hero" style="padding-bottom: 10px;">
+  <div class="orb orb-a"></div>
+  <div class="grid-floor"></div>
+  <div class="container">
+    <h1>Kalkulačka <span class="grad-text">a žiadosť</span></h1>
+    <p class="lead">Vľavo si vypočítate splátku, vpravo rovno pošlete žiadosť. Ponuku máte do 24 hodín, bez záväzkov.</p>
+  </div>
+</header>
+
+<section class="sec" style="padding-top: 26px;">
+  <div class="container">
+    <div class="calcform-grid">
+    <div class="calc hl" id="kalkulacka">
+      <span class="accent-pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="11" x2="8" y2="11.01"/><line x1="12" y1="11" x2="12" y2="11.01"/><line x1="16" y1="11" x2="16" y2="11.01"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="12" y1="15" x2="12" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg>Kalkulačka splátky</span>
+      <h3>Vaša splátka naživo</h3>
+      <p class="sub">Potiahnite a sledujte tachometer</p>
+      <div class="gauge-wrap">
+        <svg class="gauge" viewBox="0 0 240 140">
+          <defs>
+            <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#1040C0"/>
+              <stop offset="100%" stop-color="#6EA8FF"/>
+            </linearGradient>
+          </defs>
+          <path class="track" d="M 20 130 A 100 100 0 0 1 220 130" fill="none" stroke-width="10" stroke-linecap="round"/>
+          <path class="fill" id="gauge-fill" d="M 20 130 A 100 100 0 0 1 220 130" fill="none" stroke-width="10" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="gauge-center">
+        <div class="val">od <span id="out-monthly">216</span> &euro;</div>
+        <div class="lbl">mesačne</div>
+        <div class="daily">to je <b id="out-daily">7,10 &euro;</b> na deň</div>
+      </div>
+      <div class="calc-row">
+        <div class="calc-row-head"><label>Cena vozidla</label><output id="out-price">15 000 &euro;</output></div>
+        <input type="range" id="in-price" min="3000" max="100000" step="500" value="15000">
+      </div>
+      <div class="calc-row">
+        <div class="calc-row-head"><label>Akontácia</label><output id="out-down">20 %</output></div>
+        <input type="range" id="in-down" min="0" max="50" step="5" value="20">
+      </div>
+      <div class="calc-row">
+        <div class="calc-row-head"><label>Doba splácania</label><output id="out-months">60 mes.</output></div>
+        <input type="range" id="in-months" min="12" max="96" step="12" value="60">
+      </div>
+      <a href="#wizard" class="btn btn-lg" id="calc-cta">Pokračovať k žiadosti &rarr;</a>
+      <p class="calc-note">Orientačný výpočet. Reálna splátka závisí od vášho profilu a partnera.</p>
+    </div>
+    <div class="form-card hl" id="wizard">
+      <div class="stepper">
+        <div class="st active" data-st="1"><div class="dot">1</div><span>Auto</span></div>
+        <div class="bar"></div>
+        <div class="st" data-st="2"><div class="dot">2</div><span>Príjem</span></div>
+        <div class="bar"></div>
+        <div class="st" data-st="3"><div class="dot">3</div><span>Kontakt</span></div>
+      </div>
+
+      <div class="wizard-step active" data-step="1">
+        <div class="field" id="f-url">
+          <label>Odkaz na vozidlo</label>
+          <div class="link-field" id="link-field">
+            <input type="url" id="wz-url" placeholder="https://www.autobazar.eu/...">
+            <span class="link-ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Link</span>
+          </div>
+          <p class="hint">Stačí skopírovať link z Autobazaru, Bazoša, Marketplace alebo iného portálu.</p>
+        </div>
+        <div id="car-fallback">
+          <div style="display:flex;align-items:center;gap:16px;margin:26px 0;color:var(--ink-3);font-size:12px;font-weight:700;letter-spacing:0.14em;">
+            <span style="flex:1;height:1px;background:var(--line);"></span>ALEBO<span style="flex:1;height:1px;background:var(--line);"></span>
+          </div>
+          <p style="font-size:14px;color:var(--ink-2);margin-bottom:16px;">Nemáte link? Stačia základné údaje:</p>
+          <div class="field-grid-2">
+            <div class="field" id="f-price">
+              <label>Cena vozidla (&euro;) <span class="req">*</span></label>
+              <input type="number" placeholder="napr. 15000" id="wz-price" min="500">
+              <p class="err-msg">Vyplňte aspoň link alebo cenu a ročník vozidla.</p>
+            </div>
+            <div class="field" id="f-year">
+              <label>Ročník vozidla <span class="req">*</span></label>
+              <input type="number" placeholder="napr. 2019" id="wz-year" min="1990" max="2026">
+              <p class="err-msg">Vyplňte ročník vozidla.</p>
+            </div>
+          </div>
+        </div>
+        <div class="wizard-nav">
+          <button class="btn btn-lg" data-next>Pokračovať &rarr;</button>
+        </div>
+      </div>
+
+      <div class="wizard-step" data-step="2">
+        <div class="field" id="f-income">
+          <label>Aký je váš zdroj príjmu? <span class="req">*</span></label>
+          <p class="err-msg">Vyberte zdroj príjmu.</p>
+        </div>
+        <div class="income-grid">
+          <div class="income-opt" data-income="employee"><span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></span>Zamestnanec</div>
+          <div class="income-opt" data-income="employee_abroad"><span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg></span>Zamestnanec v zahraničí</div>
+          <div class="income-opt" data-income="szco"><span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h.01M9 13h.01M9 17h.01M15 9h.01M15 13h.01M15 17h.01"/></svg></span>Živnostník (SZČO)</div>
+          <div class="income-opt" data-income="sro"><span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 6h.01M15 6h.01M9 10h.01M15 10h.01M9 14h.01M15 14h.01M9 22v-4h6v4"/></svg></span>Firma (s.r.o.)</div>
+        </div>
+
+        <div class="cond-block" id="block-employee">
+          <div class="field" id="f-fullname">
+            <label>Meno a priezvisko <span class="req">*</span></label>
+            <input type="text" placeholder="Ján Novák" id="wz-fullname">
+            <p class="err-msg">Povinné pole.</p>
+          </div>
+          <div class="field" id="f-birth">
+            <label>Dátum narodenia <span class="req">*</span></label>
+            <input type="date" id="wz-birth">
+            <p class="err-msg">Povinné pole.</p>
+          </div>
+          <div class="field-grid-2">
+            <div class="field">
+              <label>Adresa</label>
+              <input type="text" placeholder="Hlavná 12" id="wz-address">
+            </div>
+            <div class="field-grid-2" style="gap:16px;">
+              <div class="field">
+                <label>Mesto</label>
+                <input type="text" placeholder="Bratislava" id="wz-city">
+              </div>
+              <div class="field">
+                <label>PSČ</label>
+                <input type="text" placeholder="811 01" maxlength="6" id="wz-zip">
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Dátum nástupu do zamestnania</label>
+            <input type="date" id="wz-empstart">
+          </div>
+          <div class="field" id="f-salary">
+            <label>Priemerný čistý mesačný plat za 3 mesiace (&euro;) <span class="req">*</span></label>
+            <input type="number" placeholder="napr. 1400" id="wz-salary">
+            <p class="err-msg">Povinné pole.</p>
+          </div>
+        </div>
+
+        <div class="cond-block" id="block-business">
+          <div class="field-grid-2">
+            <div class="field" id="f-ico">
+              <label>IČO <span class="req">*</span></label>
+              <input type="text" placeholder="12345678" maxlength="8" id="wz-ico">
+              <p class="err-msg">IČO má 8 znakov.</p>
+            </div>
+            <div class="field">
+              <label>DIČ</label>
+              <input type="text" placeholder="2012345678" id="wz-dic">
+            </div>
+          </div>
+          <div class="field-grid-2">
+            <div class="field">
+              <label>Priemerné mesačné náklady (&euro;)</label>
+              <input type="number" placeholder="napr. 2000" id="wz-costs">
+            </div>
+            <div class="field" id="f-mincome">
+              <label>Priemerný mesačný príjem za 3 mesiace (&euro;) <span class="req">*</span></label>
+              <input type="number" placeholder="napr. 4500" id="wz-mincome">
+              <p class="err-msg">Povinné pole.</p>
+            </div>
+          </div>
+          <div class="field">
+            <label>Som platca DPH?</label>
+            <div class="vat-row">
+              <div class="vat-opt" data-vat="Áno">Áno</div>
+              <div class="vat-opt" data-vat="Nie">Nie</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="wizard-nav">
+          <button class="btn btn-ghost" data-back>&larr; Späť</button>
+          <button class="btn" data-next style="flex:2;">Pokračovať &rarr;</button>
+        </div>
+      </div>
+
+      <div class="wizard-step" data-step="3">
+        <div class="field-grid-2">
+          <div class="field">
+            <label>Výška akontácie (&euro;)</label>
+            <input type="number" placeholder="napr. 2000" id="wz-down">
+            <p class="hint">Suma, ktorú zaplatíte hneď. Môže byť 0.</p>
+          </div>
+          <div class="field">
+            <label>Predstava o mesačnej splátke (&euro;)</label>
+            <input type="number" placeholder="napr. 250" id="wz-wish">
+          </div>
+        </div>
+        <div class="field">
+          <div class="calc-row-head" style="margin-bottom:10px;"><label style="margin-bottom:0;">Doba splácania</label><output id="wz-months-out" style="font-family:'Space Grotesk';font-size:17px;font-weight:700;">60 mesiacov</output></div>
+          <input type="range" id="wz-months" min="12" max="96" step="12" value="60">
+          <div class="range-meta"><span>12 mes.</span><span>96 mes.</span></div>
+        </div>
+        <div class="field-grid-2">
+          <div class="field" id="f-email">
+            <label>Email <span class="req">*</span></label>
+            <input type="email" placeholder="vase@meno.sk" id="wz-email">
+            <p class="err-msg">Zadajte platný email.</p>
+          </div>
+          <div class="field" id="f-phone">
+            <label>Telefónne číslo <span class="req">*</span></label>
+            <div class="phone-group">
+              <span class="prefix">+421</span>
+              <input type="tel" placeholder="9XX XXX XXX" id="wz-phone">
+            </div>
+            <p class="err-msg">Zadajte platné telefónne číslo.</p>
+          </div>
+        </div>
+        <div class="field">
+          <label>Doplňujúce informácie</label>
+          <textarea rows="3" placeholder="Poznámky, špecifické požiadavky..." id="wz-notes"></textarea>
+        </div>
+        <label class="check-row" id="f-gdpr">
+          <input type="checkbox" id="wz-gdpr">
+          <span>Súhlasím so spracovaním osobných údajov v zmysle <a href="gdpr.html" target="_blank">zásad ochrany osobných údajov</a>. <span class="req">*</span></span>
+        </label>
+        <div class="wizard-nav">
+          <button class="btn btn-ghost" data-back>&larr; Späť</button>
+          <button class="btn" data-submit style="flex:2;">Odoslať žiadosť &rarr;</button>
+        </div>
+        <p class="form-note">Ozveme sa do 24 hodín. Odoslanie vás k ničomu nezaväzuje.</p>
+      </div>
+
+      <div class="wizard-step" data-step="4">
+        <div class="success-box">
+          <div class="ico"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></div>
+          <h3>Žiadosť je u nás.</h3>
+          <p>Toto sa deje práve teraz:</p>
+          <div class="tracker">
+            <div class="tk done">
+              <div class="tk-dot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></div>
+              <div><b>Žiadosť prijatá</b><span>Máme všetko, čo potrebujeme</span></div>
+            </div>
+            <div class="tk now">
+              <div class="tk-dot">2</div>
+              <div><b>Porovnávame ponuky 6 partnerov</b><span>Hľadáme najvýhodnejšie podmienky pre váš profil</span></div>
+            </div>
+            <div class="tk next">
+              <div class="tk-dot">3</div>
+              <div><b>Ponuka do 24 hodín</b><span>Ozveme sa na telefón a email, ktorý ste zadali</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reassure">
+        <div><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg><span>Vaše údaje sú u nás v bezpečí</span></div>
+        <div><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7a2.1 2.1 0 0 0-3-3l-7 7-1 4z"/><path d="M18 13l-3-3"/><path d="M4 21h16"/></svg><span>Online podpis zmluvy možný</span></div>
+        <div><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg><span>Ozveme sa do 24 hodín</span></div>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ Dôvody dôverovať (pridané na žiadosť klienta) ══ -->
+<section class="sec" style="padding-top: 10px; padding-bottom: 20px;">
+  <div class="container">
+    <div class="greview-box" style="margin-top:0; gap: 34px;">
+      <span class="gr-txt" style="display:inline-flex;align-items:center;gap:9px;"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <b>4,9 / 5</b> od 800+ klientov</span>
+      <span class="gr-txt"><b>Schválenie do 24 hodín</b> od podania žiadosti</span>
+      <span class="gr-txt"><b>0 &euro; za vybavenie.</b> Žiadne skryté poplatky</span>
+      <span class="gr-txt"><b>Online podpis.</b> Žiadne behanie po pobočkách</span>
+    </div>
+  </div>
+</section>
+
+<section class="sec" style="padding-top: 20px;">
+  <div class="container">
+    <div class="sec-head center">
+      <span class="kicker center">Skúsenosti klientov</span>
+      <h2>Pomohli sme už <span class="grad-text">stovkám ľudí</span></h2>
+    </div>
+    <div class="features-grid">
+      <div class="panel-card feature-card">
+        <div class="stars" style="margin-bottom:10px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p style="font-size:14.5px; line-height:1.6;">„Auto z Bazoša, o všetko sa postarali. Od poslania linku po podpis zmluvy to trvalo dva dni.“</p>
+        <p style="margin-top:12px; font-weight:700;">Denis, Nitra <span style="opacity:.55; font-weight:500;">· BMW M4</span></p>
+      </div>
+      <div class="panel-card feature-card">
+        <div class="stars" style="margin-bottom:10px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p style="font-size:14.5px; line-height:1.6;">„Čakali sme druhé dieťa a potrebovali väčšie SUV. Splátku nastavili tak, aby sme nesiahali na úspory.“</p>
+        <p style="margin-top:12px; font-weight:700;">Jakub a Simona, Trenčín <span style="opacity:.55; font-weight:500;">· rodinné SUV</span></p>
+      </div>
+      <div class="panel-card feature-card">
+        <div class="stars" style="margin-bottom:10px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p style="font-size:14.5px; line-height:1.6;">„Ako živnostník som čakal problémy. Stačilo IČO a do 20 hodín som mal schválené.“</p>
+        <p style="margin-top:12px; font-weight:700;">Lukáš, Senica <span style="opacity:.55; font-weight:500;">· Yamaha MT-07</span></p>
+      </div>
+      <div class="panel-card feature-card">
+        <div class="stars" style="margin-bottom:10px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p style="font-size:14.5px; line-height:1.6;">„Firemný minibager na splátky bez akontácie. Vybavené online popri práci.“</p>
+        <p style="margin-top:12px; font-weight:700;">Jozef, Humenné <span style="opacity:.55; font-weight:500;">· minibager JCB</span></p>
+      </div>
+    </div>
+    <p style="text-align:center; margin-top:26px;"><a href="referencie.html" class="link-ghost">Všetky referencie &rarr;</a></p>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="container">
+    <div class="sec-head center">
+      <span class="kicker center">Naši leasing partneri</span>
+      <h2 data-reveal>6 partnerov. <span class="grad-text">Jedna žiadosť.</span></h2>
+      <p data-reveal>Spolupracujeme s najvýznamnejšími leasing spoločnosťami a bankami na slovenskom trhu. Vďaka tomu vám vieme ponúknuť najvýhodnejšie podmienky.</p>
+    </div>
+    <div class="partners-grid">
+      <div class="partner-card" data-reveal><img loading="lazy" decoding="async" src="img/partners/cofidis-removebg-preview.png" alt="Cofidis"></div>
+      <div class="partner-card" data-reveal><img loading="lazy" decoding="async" src="img/partners/Home_Credit_logo.png" alt="Home Credit"></div>
+      <div class="partner-card" data-reveal><img loading="lazy" decoding="async" src="img/partners/Essox-logo_transp-1.png" alt="Essox"></div>
+      <div class="partner-card" data-reveal><img loading="lazy" decoding="async" src="img/partners/porsche_finance-removebg-preview.png" alt="Porsche Finance Slovakia"></div>
+      <div class="partner-card" data-reveal><img loading="lazy" decoding="async" src="img/partners/vub_leasing-removebg-preview.png" alt="VÚB Leasing"></div>
+      <div class="partner-card" data-reveal><img loading="lazy" decoding="async" src="img/partners/ahoj-pozicka.svg" alt="Ahoj"></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="container-narrow">
+    <div class="sec-head center">
+      <span class="kicker center">FAQ</span>
+      <h2 data-reveal>Najčastejšie otázky</h2>
+    </div>
+    <div class="faq-list">
+      <div class="panel-card faq-item"><div class="q">Dá sa vybaviť leasing aj bez akontácie?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="a"><p>Áno, financujeme aj bez akontácie. Konkrétne podmienky závisia od typu vozidla a vášho profilu. Presnú ponuku pripravíme po vyplnení krátkej žiadosti.</p></div></div>
+      <div class="panel-card faq-item"><div class="q">Ako rýchlo dostanem schválenie?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="a"><p>Štandardne do 24 hodín od podania žiadosti. V mnohých prípadoch ešte rýchlejšie. Stačí vyplniť formulár a ozveme sa.</p></div></div>
+      <div class="panel-card faq-item"><div class="q">Môžem poslať auto z Autobazaru alebo Bazoša?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="a"><p>Áno, akýkoľvek inzerát zo slovenského trhu. Stačí skopírovať link do formulára vyššie a my si auto pozrieme.</p></div></div>
+      <div class="panel-card faq-item"><div class="q">Dá sa všetko podpísať online?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="a"><p>Áno, zmluvu podpíšete elektronicky z pohodlia domova. Žiadne osobné stretnutia ani návštevy pobočky.</p></div></div>
+      <div class="panel-card faq-item"><div class="q">Aké doklady potrebujem?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="a"><p>Štandardne občiansky preukaz a doklad o príjme. Konkrétny zoznam závisí od vášho profilu a vyžiadame si ho až pri schvaľovaní. Začnite vyplnením žiadosti.</p></div></div>
+      <div class="panel-card faq-item"><div class="q">Aký je minimálny príjem?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="a"><p>Posudzujeme každú žiadosť individuálne. Vo všeobecnosti potrebujete stabilný príjem dostatočný na pokrytie splátky. Najlepšie zistíte odoslaním žiadosti.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="about">
+        <a href="index.html" class="brand brand-sm"><img loading="lazy" decoding="async" src="img/logo-icon.svg" alt="AutoMesacne.sk"><span class="brand-txt"><span class="brand-name">AUTOMESAČNE<span class="tld">.sk</span></span><span class="brand-tag">FINANCOVANIE ÁUT JEDNODUCHO A RÝCHLO</span></span></a>
+        <p>Financovanie auta z celého Slovenska. Rýchlo, online, bez papierovania.</p>
+      </div>
+      <div>
+        <h4>Navigácia</h4>
+        <ul>
+          <li><a href="index.html">Domov</a></li>
+          <li><a href="referencie.html">Referencie</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="o-nas.html">O nás</a></li>
+          <li><a href="kontakt.html">Kontakt</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Kontakt</h4>
+        <ul>
+          <li><a href="mailto:info@automesacne.sk">info@automesacne.sk</a></li>
+          <li><a href="tel:0950840857">0950 840 857</a></li>
+          <li><a>Po-Pi 8:00 až 17:00</a></li>
+        </ul>
+      </div>
+      <div class="co">
+        <h4>Spoločnosť</h4>
+        <div>IČO: 55343198</div>
+        <div>DIČ: 2121960291</div>
+        <div>IČ DPH: SK2121960291</div>
+        <div>Hlavná 571/124, 946 32 Marcelová</div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 AutoMesacne.sk. Všetky práva vyhradené.</span>
+      <a href="gdpr.html">Ochrana osobných údajov</a>
+      <span>Stránku vytvorilo <a href="https://spacesolutions.sk" style="color:var(--ink-2);">Space Solutions</a></span>
+    </div>
+  </div>
+</footer>
+
+<div class="sticky-cta"><a href="tel:0950840857" class="sc-tel"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8 10a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"/></svg></a><a href="#wizard" class="btn">Získať ponuku</a></div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="assets/base.js?v=20260706"></script>
+<script>
+/* CALC + GAUGE */
+const price = document.getElementById('in-price');
+const down = document.getElementById('in-down');
+const months = document.getElementById('in-months');
+const gauge = document.getElementById('gauge-fill');
+const GAUGE_LEN = gauge.getTotalLength();
+gauge.style.strokeDasharray = GAUGE_LEN;
+const fmt = n => n.toLocaleString('sk-SK');
+const mObj = { v: 216 };
+let lastMonthly = 216;
+function paint(el) {
+  const pct = (el.value - el.min) / (el.max - el.min) * 100;
+  el.style.setProperty('--fill', pct + '%');
+}
+function updateCalc() {
+  [price, down, months].forEach(paint);
+  document.getElementById('out-price').innerHTML = fmt(+price.value) + ' &euro;';
+  document.getElementById('out-down').textContent = down.value + ' %';
+  document.getElementById('out-months').textContent = months.value + ' mes.';
+  const principal = price.value * (1 - down.value / 100);
+  const r = 0.089 / 12, n = +months.value;
+  const m = Math.round(principal * r / (1 - Math.pow(1 + r, -n)));
+  lastMonthly = m;
+  gsap.to(mObj, { v: m, duration: 0.4, ease: 'power2.out', onUpdate: () => {
+    document.getElementById('out-monthly').textContent = Math.round(mObj.v);
+  }});
+  const d = m / 30.4;
+  document.getElementById('out-daily').innerHTML = (d < 10 ? d.toFixed(2) : d.toFixed(1)).replace('.', ',') + ' &euro;';
+  gauge.style.strokeDashoffset = GAUGE_LEN * (1 - Math.min(m / 1500, 1));
+}
+let calcTracked = false;
+[price, down, months].forEach(el => el.addEventListener('input', () => {
+  if (!calcTracked) { calcTracked = true; amTrack('calc_interaction', {}); }
+  updateCalc();
+}));
+updateCalc();
+
+
+
+/* WIZARD */
+const wizard = document.getElementById('wizard');
+let incomeType = '';
+
+function goStep(n) {
+  wizard.querySelectorAll('.wizard-step').forEach(s => s.classList.toggle('active', +s.dataset.step === n));
+  wizard.querySelectorAll('.stepper .st').forEach(st => {
+    const i = +st.dataset.st;
+    st.classList.toggle('active', i === n);
+    st.classList.toggle('done', i < n);
+  });
+  if (n === 4) {
+    wizard.querySelector('.stepper').style.display = 'none';
+    wizard.querySelector('.reassure').style.display = 'none';
+  }
+  wizard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+const val = id => document.getElementById(id).value.trim();
+const setErr = (id, on) => document.getElementById(id).classList.toggle('error', on);
+
+/* link field: badge + rozpoznanie portálu + skryť fallback */
+const urlInput = document.getElementById('wz-url');
+const PORTALS = [
+  ['autobazar', 'Autobazar.eu'], ['bazos', 'Bazoš.sk'], ['facebook', 'Marketplace'],
+  ['carselect', 'Carselect'], ['autoscout', 'AutoScout24'], ['mobile.de', 'Mobile.de'],
+  ['otomoto', 'OTOMOTO'], ['tipcars', 'TipCars'], ['sauto', 'Sauto.cz']
+];
+urlInput.addEventListener('input', () => {
+  const v = urlInput.value.trim();
+  const has = v !== '';
+  const portal = PORTALS.find(([k]) => v.toLowerCase().includes(k));
+  const badge = document.querySelector('#link-field .link-ok');
+  badge.lastChild.textContent = portal ? portal[1] + ' rozpoznaný' : 'Link';
+  document.getElementById('link-field').classList.toggle('has-link', has);
+  document.getElementById('car-fallback').style.display = has ? 'none' : '';
+  if (has) { setErr('f-price', false); setErr('f-year', false); }
+});
+
+/* income type -> podmienené bloky */
+wizard.querySelectorAll('.income-opt').forEach(o => o.addEventListener('click', () => {
+  wizard.querySelectorAll('.income-opt').forEach(x => x.classList.remove('selected'));
+  o.classList.add('selected');
+  incomeType = o.dataset.income;
+  setErr('f-income', false);
+  const isEmp = incomeType === 'employee' || incomeType === 'employee_abroad';
+  document.getElementById('block-employee').classList.toggle('visible', isEmp);
+  document.getElementById('block-business').classList.toggle('visible', !isEmp);
+}));
+
+/* platca DPH */
+wizard.querySelectorAll('.vat-opt').forEach(o => o.addEventListener('click', () => {
+  wizard.querySelectorAll('.vat-opt').forEach(x => x.classList.remove('selected'));
+  o.classList.add('selected');
+}));
+
+/* telefón +421 formátovanie */
+const phoneInput = document.getElementById('wz-phone');
+phoneInput.addEventListener('input', () => {
+  const d = phoneInput.value.replace(/\D/g, '').slice(0, 9);
+  phoneInput.value = d.length <= 3 ? d : d.length <= 6 ? d.slice(0,3)+' '+d.slice(3) : d.slice(0,3)+' '+d.slice(3,6)+' '+d.slice(6);
+});
+
+/* doba splácania slider */
+const wzMonths = document.getElementById('wz-months');
+function paintWzMonths() {
+  const pct = (wzMonths.value - wzMonths.min) / (wzMonths.max - wzMonths.min) * 100;
+  wzMonths.style.setProperty('--fill', pct + '%');
+  document.getElementById('wz-months-out').textContent = wzMonths.value + ' mesiacov';
+}
+wzMonths.addEventListener('input', paintWzMonths);
+paintWzMonths();
+
+/* validácie podľa krokov */
+function validateStep(step) {
+  let ok = true;
+  if (step === 1) {
+    if (val('wz-url') === '') {
+      const p = !val('wz-price'), y = !val('wz-year');
+      setErr('f-price', p); setErr('f-year', y);
+      ok = !p && !y;
+    }
+  }
+  if (step === 2) {
+    if (!incomeType) { setErr('f-income', true); return false; }
+    if (incomeType === 'employee' || incomeType === 'employee_abroad') {
+      const n = !val('wz-fullname'), b = !val('wz-birth'), s = !val('wz-salary');
+      setErr('f-fullname', n); setErr('f-birth', b); setErr('f-salary', s);
+      ok = !n && !b && !s;
+    } else {
+      const i = val('wz-ico').length !== 8, m = !val('wz-mincome');
+      setErr('f-ico', i); setErr('f-mincome', m);
+      ok = !i && !m;
+    }
+  }
+  if (step === 3) {
+    const e = !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(val('wz-email'));
+    const p = val('wz-phone').replace(/\D/g, '').length < 9;
+    const g = !document.getElementById('wz-gdpr').checked;
+    setErr('f-email', e); setErr('f-phone', p);
+    document.getElementById('f-gdpr').classList.toggle('error', g);
+    ok = !e && !p && !g;
+  }
+  return ok;
+}
+
+wizard.querySelectorAll('[data-next]').forEach(b => b.addEventListener('click', () => {
+  const cur = +wizard.querySelector('.wizard-step.active').dataset.step;
+  if (validateStep(cur)) {
+    amTrack('wizard_step_completed', { step: cur, income_type: incomeType || undefined });
+    goStep(cur + 1);
+  }
+}));
+wizard.querySelectorAll('[data-back]').forEach(b => b.addEventListener('click', () => {
+  const cur = +wizard.querySelector('.wizard-step.active').dataset.step;
+  goStep(cur - 1);
+}));
+wizard.querySelector('[data-submit]').addEventListener('click', () => {
+  if (!validateStep(3)) return;
+  const lead = {
+    type: 'ziadost',
+    carUrl: val('wz-url'), carPrice: val('wz-price'), carYear: val('wz-year'),
+    incomeType,
+    fullName: val('wz-fullname'), birthDate: val('wz-birth'), address: val('wz-address'),
+    city: val('wz-city'), zip: val('wz-zip'), employmentStart: val('wz-empstart'), salary: val('wz-salary'),
+    ico: val('wz-ico'), dic: val('wz-dic'), monthlyCosts: val('wz-costs'), monthlyIncome: val('wz-mincome'),
+    vatPayer: (wizard.querySelector('.vat-opt.selected') || {}).textContent || '',
+    downPayment: val('wz-down'), desiredMonthly: val('wz-wish'), loanMonths: wzMonths.value,
+    email: val('wz-email'), phone: '+421 ' + val('wz-phone'), notes: val('wz-notes')
+  };
+  fetch('/api/lead', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(lead)
+  }).catch(() => {});
+  amTrack('wizard_submitted', { income_type: incomeType, has_link: !!lead.carUrl });
+  localStorage.removeItem('am_wizard');
+  goStep(4);
+});
+
+/* rozpracovaný wizard prežije odchod zo stránky */
+const WZ_FIELDS = ['wz-url','wz-price','wz-year','wz-fullname','wz-birth','wz-address','wz-city','wz-zip','wz-empstart','wz-salary','wz-ico','wz-dic','wz-costs','wz-mincome','wz-down','wz-wish','wz-months','wz-email','wz-phone','wz-notes'];
+function saveWizard() {
+  const data = { incomeType };
+  WZ_FIELDS.forEach(id => data[id] = document.getElementById(id).value);
+  const vat = wizard.querySelector('.vat-opt.selected');
+  data.vat = vat ? vat.dataset.vat : '';
+  localStorage.setItem('am_wizard', JSON.stringify(data));
+}
+WZ_FIELDS.forEach(id => document.getElementById(id).addEventListener('input', saveWizard));
+wizard.addEventListener('click', e => {
+  if (e.target.closest('.income-opt') || e.target.closest('.vat-opt')) saveWizard();
+});
+(function restoreWizard() {
+  let data;
+  try { data = JSON.parse(localStorage.getItem('am_wizard')); } catch (e) { return; }
+  if (!data) return;
+  WZ_FIELDS.forEach(id => { if (data[id]) document.getElementById(id).value = data[id]; });
+  if (data.incomeType) {
+    const opt = wizard.querySelector('.income-opt[data-income="' + data.incomeType + '"]');
+    if (opt) opt.click();
+  }
+  if (data.vat) {
+    const v = wizard.querySelector('.vat-opt[data-vat="' + data.vat + '"]');
+    if (v) v.classList.add('selected');
+  }
+  if (data['wz-url']) urlInput.dispatchEvent(new Event('input'));
+  paintWzMonths();
+})();
+
+/* kalkulačka -> predvyplnenie žiadosti */
+document.getElementById('calc-cta').addEventListener('click', () => {
+  document.getElementById('wz-price').value = price.value;
+  document.getElementById('wz-down').value = Math.round(price.value * down.value / 100);
+  document.getElementById('wz-wish').value = lastMonthly;
+  wzMonths.value = months.value;
+  paintWzMonths();
+});
+
+
+/* ══ Obojsmerná synchronizácia kalkulačka <-> formulár (len na tejto stránke) ══ */
+let syncing = false;
+function calcToForm() {
+  if (syncing) return; syncing = true;
+  document.getElementById('wz-price').value = price.value;
+  document.getElementById('wz-down').value = Math.round(price.value * down.value / 100);
+  document.getElementById('wz-months').value = months.value;
+  paintWzMonths();
+  saveWizard();
+  syncing = false;
+}
+function formToCalc() {
+  if (syncing) return; syncing = true;
+  const v = parseInt(document.getElementById('wz-price').value, 10);
+  if (v >= +price.min) {
+    price.value = Math.min(v, +price.max);
+    const dp = parseInt(document.getElementById('wz-down').value, 10);
+    if (dp >= 0 && v > 0) down.value = Math.max(+down.min, Math.min(+down.max, Math.round(dp / v * 100 / 5) * 5));
+    updateCalc();
+  }
+  syncing = false;
+}
+[price, down, months].forEach(el => el.addEventListener('input', calcToForm));
+document.getElementById('wz-price').addEventListener('input', formToCalc);
+document.getElementById('wz-down').addEventListener('input', formToCalc);
+document.getElementById('wz-months').addEventListener('input', () => {
+  if (syncing) return; syncing = true;
+  months.value = document.getElementById('wz-months').value;
+  updateCalc();
+  syncing = false;
+});
+calcToForm();
+</script>
+</body>
+</html>

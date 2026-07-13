@@ -81,6 +81,10 @@ function SiteNav({ active = "home", scrollToForm }) {
             <Clock className="w-4 h-4" />
             <span>Po-Pi 8:00 až 17:00</span>
           </div>
+          <a href="tel:0950840857" className="hidden xl:flex items-center gap-1.5 text-sm font-semibold text-blue-900 hover:text-blue-700">
+            <Phone className="w-4 h-4" />
+            <span>0950 840 857</span>
+          </a>
 
           <button
             type="button"
@@ -135,6 +139,10 @@ function SiteNav({ active = "home", scrollToForm }) {
               <Clock className="w-4 h-4" />
               <span>Po-Pi 8:00 až 17:00</span>
             </div>
+            <a href="tel:0950840857" className="flex items-center gap-2 text-sm font-semibold text-blue-900 px-4 py-2">
+              <Phone className="w-4 h-4" />
+              <span>0950 840 857</span>
+            </a>
             <button
               type="button"
               onClick={handleCTA}
@@ -180,6 +188,10 @@ function SiteFooter() {
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-blue-400" />
                 <a href="mailto:info@automesacne.sk" className="hover:text-white">info@automesacne.sk</a>
+              </li>
+              <li className="flex items-center gap-2">
+                <Phone className="w-4 h-4 text-blue-400" />
+                <a href="tel:0950840857" className="hover:text-white">0950 840 857</a>
               </li>
               <li className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-blue-400" />

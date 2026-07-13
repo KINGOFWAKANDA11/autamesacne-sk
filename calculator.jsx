@@ -75,7 +75,7 @@ function HeroCalculator({ scrollToForm, setCalcPrefill }) {
 
   const downPayment = Math.round((price * downPct) / 100);
   const financed = price - downPayment;
-  const monthly = months > 0 ? (financed / months) * 1.08 : 0;
+  const monthly = months > 0 ? (financed / months) * 1.25 : 0;
   const total = monthly * months + downPayment;
 
   // URL validation
