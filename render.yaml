@@ -1,0 +1,18 @@
+# Render Blueprint pre 2BIT autoškolu. Podrobnosti: autoskola-app/README.md → „Nasadenie na Render“.
+services:
+  - type: web
+    name: autoskola-2bit
+    runtime: docker
+    rootDir: autoskola-app
+    plan: starter            # perzistentný disk vyžaduje platený plán; na `free` sa dáta po každom reštarte stratia
+    branch: claude/intelligent-faraday-e9y4ms
+    healthCheckPath: /
+    disk:
+      name: data
+      mountPath: /data
+      sizeGB: 5
+    envVars:
+      - key: ADMIN_EMAIL
+        value: admin@2bit.local
+      - key: ADMIN_PASSWORD
+        generateValue: true   # heslo uvidíte v Render → Environment

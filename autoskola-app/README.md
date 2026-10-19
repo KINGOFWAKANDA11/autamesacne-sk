@@ -65,6 +65,16 @@ Za reverzný proxy (Caddy/nginx) s **HTTPS**, `COOKIE_SECURE=1`, `HOST=127.0.0.1
 (databáza + nahrané súbory). Pred spustením s reálnymi platbami: reálna brána, SMTP pre e-maily, obchodné podmienky
 a zásady ochrany osobných údajov.
 
+### Nasadenie na Render (bez príkazového riadka)
+
+1. Na render.com sa prihláste cez GitHub (Render si vyžiada prístup k repozitáru).
+2. **New → Blueprint** → vyberte repozitár `autamesacne-sk` → **Apply**. Render si prečíta `render.yaml`, postaví Docker obraz a spustí appku.
+3. Po pár minútach dostanete adresu `https://autoskola-2bit.onrender.com` (s HTTPS, takže funguje aj inštalácia PWA).
+4. Admin heslo: Render → službu → **Environment** → `ADMIN_PASSWORD`; e-mail `admin@2bit.local`.
+
+Plán `starter` (cca 7 USD/mes) má perzistentný disk – bez neho by sa po každom reštarte stratili účty, úpravy v CMS a nahrané súbory.
+Dockerfile ani blueprint som v tomto prostredí nemohol spustiť (chýba Docker daemon), pri prvom nasadení skontrolujte logy.
+
 ## Štruktúra
 
 ```
