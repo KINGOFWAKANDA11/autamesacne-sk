@@ -1,0 +1,16 @@
+2BIT AUTOSKOLA – SPUSTENIE NA VASOM POCITACI
+
+1. Raz nainstalujte Node.js (verzia LTS): https://nodejs.org   (staci klikat Dalej)
+2. Rozbalte tento zip.
+3. Windows: dvojklik na  start.bat
+   Mac:     dvojklik na  start.command   (ak Mac nepusti: pravy klik -> Otvorit)
+4. Otvori sa prehliadac na http://localhost:3000
+   Cierne okno s textom nezatvarajte, kym appku pouzivate (zatvorenim sa appka vypne).
+
+PRIHLASENIE
+- Ziak: v appke kliknite Registracia (bez platby, ucet sa aktivuje hned).
+- Admin (sprava obsahu): pri prvom spusteni sa v ciernom okne vypise e-mail a heslo.
+  Heslo sa ukaze IBA RAZ - zapiste si ho. Po prihlaseni: meno vpravo hore -> Administracia.
+- Zabudli ste heslo admina? Zmazte priecinok "data" a spustite znova (zmaze sa vsetko, vratane uctov).
+
+Viac informacii: README.md
