@@ -1,0 +1,13 @@
+{
+  "name": "autoskola-2bit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "E-learning aplikácia pre autoškolu (2BIT) – web / PWA, bez externých závislostí",
+  "type": "commonjs",
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "start": "node --no-warnings server/index.js",
+    "reset": "node --no-warnings server/reset.js",
+    "test": "node --no-warnings --test server/app.test.js"
+  }
+}
