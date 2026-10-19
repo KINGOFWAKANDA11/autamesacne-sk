@@ -165,12 +165,12 @@ function loginView() {
 }
 
 async function registerView() {
-  state.config ??= await api('config');
+  state.config = await api('config');
   const f = { first: field('Meno', { required: true, autocomplete: 'given-name', maxlength: 80 }), last: field('Priezvisko', { required: true, autocomplete: 'family-name', maxlength: 80 }),
     email: field('E-mail', { type: 'email', required: true, autocomplete: 'email' }), pass: field('Heslo', { type: 'password', required: true, minlength: 8, autocomplete: 'new-password' }, 'Aspoň 8 znakov.') };
   const consent = h('input', { type: 'checkbox', id: 'consent', required: true });
   const box = h('div');
-  const btn = h('button', { class: 'btn', type: 'submit', style: 'width:100%' }, 'Pokračovať na platbu');
+  const btn = h('button', { class: 'btn', type: 'submit', style: 'width:100%' }, state.config.free ? 'Vytvoriť účet' : 'Pokračovať na platbu');
   const form = h('form', { onSubmit: async (e) => {
     e.preventDefault();
     btn.disabled = true;
@@ -179,10 +179,11 @@ async function registerView() {
       const r = await api('register', { method: 'POST', body: { firstName: f.first.input.value, lastName: f.last.input.value, email: f.email.input.value, password: f.pass.input.value, consent: consent.checked } });
       state.user = r.user;
       state.redirect = r.redirect;
-      go(r.redirect);
+      go(r.redirect || '#/');
     } catch (err) { box.replaceChildren(errBox(err.message)); btn.disabled = false; }
   } },
-  h('div', { class: 'price-box' }, 'Cena prístupu: ', h('b', {}, money(state.config.priceCents, state.config.currency)), h('div', { style: 'font-weight:500;font-size:13px' }, 'Prístup sa aktivuje po úspešnej úhrade.')),
+  state.config.free ? h('div', { class: 'price-box' }, 'Testovací režim: ', h('b', {}, 'bez platby'), h('div', { style: 'font-weight:500;font-size:13px' }, 'Účet sa aktivuje hneď po registrácii.'))
+    : h('div', { class: 'price-box' }, 'Cena prístupu: ', h('b', {}, money(state.config.priceCents, state.config.currency)), h('div', { style: 'font-weight:500;font-size:13px' }, 'Prístup sa aktivuje po úspešnej úhrade.')),
   box, h('div', { class: 'row' }, f.first.node, f.last.node), f.email.node, f.pass.node,
   h('div', { class: 'field check' }, h('label', { for: 'consent' }, consent, h('span', {}, 'Súhlasím so spracovaním osobných údajov (GDPR) na účely vedenia účtu a platby a s obchodnými podmienkami.'))),
   btn, h('div', { class: 'links' }, h('span', {}, 'Už máte účet?'), h('a', { href: '#/prihlasenie' }, 'Prihlásiť sa')));
@@ -403,10 +404,132 @@ function videoOverlay(id) {
 }
 
 /* ====================== testy a legislatíva ====================== */
-async function testsView() {
-  const t = await api('tests');
-  const link = t.url ? h('div', { class: 'tests-link' }, t.text ? h('p', {}, t.text) : null, h('a', { href: t.url, target: '_blank', rel: 'noopener noreferrer' }, t.url)) : h('p', {}, 'Odkaz na testy zatiaľ nie je nastavený.');
-  shell('testy', h('aside', { class: 'side' }, h('div', { class: 'panel' }, h('h2', {}, 'Testy'))), [link], { title: 'Testy' });
+/* ====================== testy (vlastný modul) ====================== */
+const dateFmt = (ms) => new Date(ms).toLocaleString('sk-SK', { dateStyle: 'short', timeStyle: 'short' });
+const testsSide = () => h('aside', { class: 'side' }, h('div', { class: 'panel' }, h('h2', {}, 'Testy')));
+
+async function startRun(mode, category = '') {
+  try {
+    const r = await api('tests/start', { method: 'POST', body: { mode, category } });
+    state.run = { ...r, idx: 0, answers: {}, checked: {}, startedAt: Date.now() };
+    state.result = null;
+    go('#/testy/priebeh');
+  } catch (err) { toast(err.message); }
+}
+
+async function testsHomeView() {
+  const [meta, hist] = await Promise.all([api('tests/meta'), api('tests/history')]);
+  const card = (title, lines, label, onClick, yellow) => h('div', { class: 'tcard' }, h('h2', {}, title), h('p', {}, lines), h('button', { class: `btn${yellow ? ' yellow' : ''}`, onClick }, label));
+  const cards = [
+    card('Skúšobný test', `${meta.exam.questions} otázok · ${meta.exam.minutes} min · úspešnosť aspoň ${meta.exam.passPercent} %`, 'Spustiť test', () => startRun('exam'), true),
+    card('Cvičenie – všetky otázky', `${meta.total} otázok, okamžitá spätná väzba`, 'Cvičiť', () => startRun('practice')),
+    ...meta.categories.filter((c) => c.name).map((c) => card(c.name, `${c.count} otázok`, 'Cvičiť', () => startRun('practice', c.name))),
+  ];
+  const rows = hist.map((r) => h('tr', {}, h('td', {}, dateFmt(r.finished_at)), h('td', {}, r.mode === 'exam' ? 'Skúšobný test' : `Cvičenie${r.category ? ` – ${r.category}` : ''}`),
+    h('td', {}, `${r.correct} / ${r.total} (${r.total ? Math.round((r.correct / r.total) * 100) : 0} %)`),
+    h('td', {}, r.mode === 'exam' ? h('span', { class: `pill ${r.passed ? 'paid' : 'failed'}` }, r.passed ? 'úspešný' : 'neúspešný') : '')));
+  shell('testy', testsSide(), [h('h1', {}, 'Testy'),
+    meta.total ? h('div', { class: 'test-cards' }, cards) : h('p', {}, 'Otázky zatiaľ nie sú nahrané (CMS → Testy).'),
+    h('h3', { class: 'section' }, 'Posledné výsledky'),
+    rows.length ? h('table', { class: 'admin-table' }, h('thead', {}, h('tr', {}, ['Dátum', 'Typ', 'Výsledok', ''].map((t) => h('th', {}, t)))), h('tbody', {}, rows)) : h('p', {}, 'Zatiaľ ste nerobili žiadny test.'),
+    meta.url ? h('p', { style: 'margin-top:34px' }, `${meta.text || 'Oficiálne testy Ministerstva vnútra SR:'} `, h('a', { href: meta.url, target: '_blank', rel: 'noopener noreferrer' }, meta.url)) : null,
+  ], { title: 'Testy' });
+}
+
+function runView() {
+  const run = state.run;
+  if (!run) return go('#/testy');
+  const exam = run.mode === 'exam';
+  const gridEl = h('nav', { class: 'numgrid', 'aria-label': 'Otázky' });
+  const mainEl = h('div');
+  const timerEl = h('div', { class: 'timer', role: 'timer' });
+  const finishBtn = h('button', { class: 'btn yellow', style: 'margin-top:14px;width:100%' }, exam ? 'Odovzdať test' : 'Ukončiť cvičenie');
+  const side = h('aside', { class: 'side' }, h('div', { class: 'panel' }, h('p', { class: 'kicker' }, exam ? 'SKÚŠOBNÝ TEST' : 'CVIČENIE'), exam ? timerEl : h('p', { class: 'big', style: 'font-size:26px;margin:0' }, `${run.questions.length} otázok`), finishBtn), gridEl);
+  shell('testy', side, [mainEl], { title: exam ? 'Skúšobný test' : 'Cvičenie' });
+
+  let finishing = false;
+  const finish = async (force = false) => {
+    if (finishing) return;
+    const unanswered = run.questions.filter((qq) => !(run.answers[qq.id]?.length)).length;
+    if (!force && unanswered && !confirm(`Nezodpovedané otázky: ${unanswered}. Naozaj ukončiť?`)) return;
+    finishing = true;
+    try {
+      state.result = await api(`tests/${run.attemptId}/submit`, { method: 'POST', body: { answers: run.answers } });
+      state.run = null;
+      go('#/testy/vysledok');
+    } catch (err) { finishing = false; toast(err.message); }
+  };
+  finishBtn.addEventListener('click', () => finish());
+
+  if (exam) {
+    const endsAt = run.startedAt + run.minutes * 60000;
+    const tick = () => {
+      const left = Math.max(0, Math.round((endsAt - Date.now()) / 1000));
+      timerEl.textContent = `${String(Math.floor(left / 60)).padStart(2, '0')}:${String(left % 60).padStart(2, '0')}`;
+      timerEl.classList.toggle('low', left <= 60);
+      if (left === 0) finish(true);
+    };
+    tick();
+    const iv = setInterval(tick, 1000);
+    disposers.push(() => clearInterval(iv));
+  }
+
+  const drawGrid = () => gridEl.replaceChildren(...run.questions.map((qq, i) => h('a', {
+    href: '#', class: i === run.idx ? 'active' : (run.answers[qq.id]?.length ? 'done' : ''), 'aria-label': `Otázka ${i + 1}`,
+    onClick: (e) => { e.preventDefault(); run.idx = i; draw(); } }, i + 1)));
+
+  function draw() {
+    const qq = run.questions[run.idx];
+    const chosen = run.answers[qq.id] || [];
+    const fb = run.checked[qq.id];
+    const list = qq.answers.map((a) => {
+      const input = h('input', { type: qq.multi ? 'checkbox' : 'radio', name: `q${qq.id}`, checked: chosen.includes(a.i), disabled: !!fb, onChange: (e) => {
+        const cur = new Set(run.answers[qq.id] || []);
+        if (!qq.multi) cur.clear();
+        if (e.target.checked) cur.add(a.i); else cur.delete(a.i);
+        run.answers[qq.id] = [...cur];
+        drawGrid();
+        draw();
+      } });
+      const cls = fb ? (fb.right.includes(a.i) ? 'right' : chosen.includes(a.i) ? 'wrong' : '') : '';
+      return h('label', { class: `answer ${cls}` }, input, h('span', {}, a.text));
+    });
+    const last = run.idx === run.questions.length - 1;
+    const checkBtn = !exam && !fb ? h('button', { class: 'btn yellow', disabled: !chosen.length, onClick: async () => {
+      try { run.checked[qq.id] = await api('tests/check', { method: 'POST', body: { questionId: qq.id, selected: chosen } }); draw(); } catch (err) { toast(err.message); }
+    } }, 'Skontrolovať') : null;
+    mainEl.replaceChildren(...[
+      h('h1', {}, `Otázka ${run.idx + 1} z ${run.questions.length}`),
+      h('p', { class: 'q-text' }, qq.text),
+      qq.multi ? h('p', { class: 'q-hint' }, 'Správnych odpovedí môže byť viac.') : null,
+      qq.image ? h('div', { class: 'zoomable' }, h('img', { src: qq.image, alt: '', onClick: () => openOverlay(h('div', { class: 'ov-body' }, h('div', { class: 'ov-media sm' }, h('img', { src: qq.image, alt: '' })))) }), h('span', { class: 'plus', 'aria-hidden': 'true' })) : null,
+      h('div', { class: 'answers' }, list),
+      fb ? h('div', { class: fb.correct ? 'okmsg' : 'err' }, fb.correct ? 'Správne.' : 'Nesprávne.', fb.explanation ? h('div', { style: 'font-weight:500;margin-top:4px' }, fb.explanation) : null) : null,
+      h('div', { class: 'toolbar', style: 'margin-top:20px' },
+        h('button', { class: 'btn ghost', disabled: run.idx === 0, onClick: () => { run.idx--; draw(); } }, '← Späť'),
+        checkBtn,
+        h('button', { class: 'btn', onClick: () => (last ? finish() : (run.idx++, draw())) }, last ? (exam ? 'Odovzdať test' : 'Dokončiť') : 'Ďalšia →')),
+    ].filter(Boolean));
+    drawGrid();
+    window.scrollTo(0, 0);
+  }
+  draw();
+}
+
+function resultView() {
+  const r = state.result;
+  if (!r) return go('#/testy');
+  const exam = r.mode === 'exam';
+  const verdict = exam ? (r.passed ? h('div', { class: 'okmsg' }, `Test ste zvládli – úspešnosť ${r.percent} % (potrebných ${r.passPercent} %).`)
+    : h('div', { class: 'err' }, r.late ? 'Test bol odovzdaný po uplynutí času.' : `Test ste nezvládli – úspešnosť ${r.percent} % (potrebných ${r.passPercent} %).`)) : null;
+  const items = r.results.map((x, i) => h('div', { class: `res-item ${x.ok ? 'ok' : 'bad'}` },
+    h('p', { class: 'q-text' }, `${i + 1}. ${x.text} `, h('span', { class: `pill ${x.ok ? 'paid' : 'failed'}` }, x.ok ? 'správne' : 'nesprávne')),
+    x.image ? h('img', { src: x.image, alt: '', style: 'max-height:160px;background:#fff;margin-bottom:8px' }) : null,
+    h('div', { class: 'answers' }, x.answers.map((a) => h('div', { class: `answer ${a.correct ? 'right' : a.selected ? 'wrong' : ''}` }, h('span', {}, `${a.selected ? '☑' : '☐'} ${a.text}${a.correct ? ' ✓' : ''}`)))),
+    x.explanation ? h('p', { class: 'q-hint' }, x.explanation) : null));
+  shell('testy', testsSide(), [h('h1', {}, exam ? 'Výsledok testu' : 'Výsledok cvičenia'),
+    h('p', { class: 'q-text' }, `Správne ${r.correct} z ${r.total} (${r.percent} %)`), verdict,
+    h('div', { class: 'toolbar' }, h('a', { class: 'btn', href: '#/testy' }, 'Späť na testy')), items], { title: 'Výsledok testu' });
 }
 
 async function legislationView() {
@@ -426,7 +549,7 @@ function accountView() {
   } }, 'Zmazať môj účet');
   shell(null, null, [h('h1', {}, 'Môj účet'),
     h('div', { class: 'form-card' },
-      h('p', {}, h('b', {}, `${state.user.firstName} ${state.user.lastName}`), h('br'), state.user.email),
+      h('p', {}, h('b', {}, `${state.user.firstName} ${state.user.lastName}`), h('br'), state.user.email, h('br'), state.user.role === 'admin' ? 'Administrátor' : `${state.user.role === 'teacher' ? 'Učiteľ' : 'Žiak'} · prístup do ${state.user.accessUntil ? new Date(state.user.accessUntil).toLocaleDateString('sk-SK') : 'bez obmedzenia'}`),
       h('h2', { style: 'margin-top:24px' }, 'Osobné údaje (GDPR)'),
       h('p', {}, 'Môžete si stiahnuť všetky údaje, ktoré o vás evidujeme, alebo účet natrvalo zmazať.'),
       h('p', {}, h('a', { class: 'btn ghost', href: '/api/me/export', download: 'moje-udaje.json' }, 'Stiahnuť moje údaje')),
@@ -438,6 +561,14 @@ async function loadUser() {
   const r = await api('me');
   state.user = r.user;
   state.redirect = r.redirect;
+  state.expired = !!r.expired;
+}
+
+function expiredView() {
+  authShell('Prístup nie je aktívny',
+    h('p', {}, state.expired ? 'Platnosť vášho prístupu vypršala.' : 'Váš účet zatiaľ nemá aktívny prístup.'),
+    h('p', {}, 'Požiadajte autoškolu o predĺženie prístupu a potom sa prihláste znova.'),
+    h('button', { class: 'btn', onClick: logout }, 'Odhlásiť sa'));
 }
 
 const OVERLAY_SECTIONS = new Set(['znacky', 'krizovatky', 'videa']);
@@ -457,10 +588,12 @@ async function route() {
     if (!state.user) return go('#/prihlasenie');
 
     /* prihlásený, ale nezaplatený */
-    if (state.user.role !== 'admin' && state.user.status !== 'active') {
+    if (!state.user.access) {
       if (view === 'platba' && a) return await paymentView(a);
-      if (!state.redirect) await loadUser();
-      return go(state.redirect || '#/prihlasenie');
+      await loadUser();
+      if (state.user?.access) return route();
+      if (state.redirect) return go(state.redirect);
+      return expiredView();
     }
     if (view === 'platba') return go('#/');
 
@@ -481,13 +614,17 @@ async function route() {
     if (view === 'znacky') { if (needPage) await signsPage(a); if (b) signOverlay(b); return; }
     if (view === 'krizovatky') { if (needPage) await isecPage(a); if (b) isecOverlay(b); return; }
     if (view === 'videa') { if (needPage) await videosPage(); if (a) videoOverlay(a); return; }
-    if (view === 'testy') return await testsView();
+    if (view === 'testy') {
+      if (a === 'priebeh') return runView();
+      if (a === 'vysledok') return resultView();
+      return await testsHomeView();
+    }
     if (view === 'legislativa') return await legislationView();
     if (view === 'ucet') return accountView();
     return go('#/');
   } catch (err) {
     if (err.status === 401) { state.user = null; return go('#/prihlasenie'); }
-    if (err.status === 402) { await loadUser(); return go(state.redirect || '#/prihlasenie'); }
+    if (err.status === 402) { await loadUser(); if (!state.user?.access) return route(); }
     resetRoot();
     root.replaceChildren(h('div', { class: 'auth' }, h('div', { class: 'card' }, h('h1', {}, 'Niečo sa pokazilo'), errBox(err.message), h('a', { class: 'btn', href: '#/' }, 'Späť na nástenku'))));
   }

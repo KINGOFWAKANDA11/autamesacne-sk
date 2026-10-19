@@ -79,11 +79,36 @@ CREATE TABLE IF NOT EXISTS videos (
   id INTEGER PRIMARY KEY, pos INTEGER NOT NULL DEFAULT 0,
   title TEXT NOT NULL, file TEXT NOT NULL DEFAULT ''
 );
+CREATE TABLE IF NOT EXISTS test_questions (
+  id INTEGER PRIMARY KEY,
+  category TEXT NOT NULL DEFAULT '',
+  text TEXT NOT NULL,
+  image TEXT NOT NULL DEFAULT '',
+  explanation TEXT NOT NULL DEFAULT '',
+  answers TEXT NOT NULL DEFAULT '[]'   -- JSON: [{text, correct}]
+);
+CREATE TABLE IF NOT EXISTS test_attempts (
+  id INTEGER PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  mode TEXT NOT NULL,                  -- exam | practice
+  category TEXT NOT NULL DEFAULT '',
+  qids TEXT NOT NULL,
+  started_at INTEGER NOT NULL,
+  finished_at INTEGER,
+  total INTEGER NOT NULL DEFAULT 0,
+  correct INTEGER NOT NULL DEFAULT 0,
+  passed INTEGER NOT NULL DEFAULT 0
+);
 CREATE TABLE IF NOT EXISTS legislation (
   id INTEGER PRIMARY KEY, pos INTEGER NOT NULL DEFAULT 0,
   title TEXT NOT NULL, url TEXT NOT NULL DEFAULT ''
 );
 `);
+
+// migrácia staršej databázy: platnosť prístupu
+if (!db.prepare('PRAGMA table_info(users)').all().some((c) => c.name === 'access_until')) {
+  db.exec('ALTER TABLE users ADD COLUMN access_until INTEGER');
+}
 
 const q = {
   all: (sql, ...p) => db.prepare(sql).all(...p),

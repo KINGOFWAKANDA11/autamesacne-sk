@@ -4,6 +4,7 @@ import { h, api, esc, toast } from './util.js';
 const T = { text: 'text', num: 'number', area: 'textarea', html: 'html', select: 'select', image: 'image', file: 'file' };
 
 const RES = {
+  otazky: { api: 'test-questions', title: 'Testové otázky', custom: 'question', cols: [['category', 'Kategória'], ['text', 'Otázka'], ['answers', 'Odpovede', 'count']] },
   lekcie: { api: 'lessons', title: 'Lekcie', custom: 'lesson', cols: [['num', '#'], ['code', 'Kód'], ['title', 'Názov']] },
   znacky: {
     api: 'signs', title: 'Značky', category: 'sign-categories',
@@ -43,9 +44,9 @@ const RES = {
 };
 
 const MENU = [
-  ['lekcie', 'Lekcie'], ['znacky', 'Značky'], ['kategorie-znaciek', 'Kategórie značiek'], ['krizovatky', 'Križovatky'],
+  ['lekcie', 'Lekcie'], ['otazky', 'Testové otázky'], ['znacky', 'Značky'], ['kategorie-znaciek', 'Kategórie značiek'], ['krizovatky', 'Križovatky'],
   ['kategorie-krizovatiek', 'Kategórie križovatiek'], ['videa', 'Videá'], ['legislativa', 'Legislatíva'],
-  ['pouzivatelia', 'Používatelia'], ['platby', 'Platby'], ['nastavenia', 'Nastavenia (cena, testy)'],
+  ['pouzivatelia', 'Používatelia'], ['platby', 'Platby'], ['nastavenia', 'Nastavenia (prístup, testy)'],
 ];
 
 const plain = (html) => String(html || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
@@ -62,6 +63,7 @@ export async function adminView(parts, ctx) {
       h('p', {}, 'Tu upravujete texty lekcií, značky, križovatky, videá, legislatívu, cenu prístupu a odkaz na testy – bez zásahu do kódu.'),
       h('p', {}, h('a', { class: 'btn', href: '#/admin/lekcie' }, 'Upraviť lekcie'), ' ', h('a', { class: 'btn ghost', href: '#/' }, 'Späť do aplikácie'))));
   }
+  if (section === 'import-otazok') return importView(show, ctx);
   if (section === 'pouzivatelia') return usersView(show, ctx);
   if (section === 'platby') return paymentsView(show);
   if (section === 'nastavenia') return settingsView(show, ctx);
@@ -70,6 +72,7 @@ export async function adminView(parts, ctx) {
   if (!res) return ctx.go('#/admin');
   if (id === 'new' || id) {
     if (res.custom === 'lesson') return lessonForm(show, ctx, res, section, id);
+    if (res.custom === 'question') return questionForm(show, ctx, res, section, id);
     return genericForm(show, ctx, res, section, id);
   }
   return listView(show, ctx, res, section);
@@ -87,7 +90,8 @@ async function listView(show, ctx, res, section) {
       res.cols.map(([k, , kind]) => h('td', {},
         kind === 'img' ? (r[k] ? h('img', { class: 'th', src: r[k], alt: '' }) : '') :
         kind === 'cat' ? catName(r[k]) :
-        kind === 'html' ? h('div', { class: 'cut' }, clip(plain(r[k]))) : h('div', { class: 'cut' }, String(r[k] ?? '')))),
+        kind === 'html' ? h('div', { class: 'cut' }, clip(plain(r[k]))) :
+        kind === 'count' ? String(JSON.parse(r[k] || '[]').length) : h('div', { class: 'cut' }, String(r[k] ?? '')))),
       h('td', { class: 'actions' },
         h('a', { class: 'btn small', href: `#/admin/${section}/${r.id}` }, 'Upraviť'), ' ',
         h('button', { class: 'btn small danger', onClick: async () => {
@@ -98,7 +102,7 @@ async function listView(show, ctx, res, section) {
   filter.addEventListener('change', draw);
   draw();
   show(res.title,
-    h('div', { class: 'toolbar' }, h('a', { class: 'btn', href: `#/admin/${section}/new` }, '+ Pridať'), res.category ? filter : null, h('span', { class: 'spacer' }), h('span', {}, `${rows.length} položiek`)),
+    h('div', { class: 'toolbar' }, h('a', { class: 'btn', href: `#/admin/${section}/new` }, '+ Pridať'), res.custom === 'question' ? h('a', { class: 'btn ghost', href: '#/admin/import-otazok' }, 'Import (JSON)') : null, res.category ? filter : null, h('span', { class: 'spacer' }), h('span', {}, `${rows.length} položiek`)),
     h('div', { style: 'overflow:auto' }, h('table', { class: 'admin-table' }, h('thead', {}, h('tr', {}, res.cols.map(([, label]) => h('th', {}, label)), h('th'))), tbody)));
 }
 
@@ -235,18 +239,89 @@ async function lessonForm(show, ctx, res, section, id) {
   show(res.title, form);
 }
 
+/* ---------- testové otázky ---------- */
+async function questionForm(show, ctx, res, section, id) {
+  const isNew = id === 'new';
+  const row = isNew ? { category: '', text: '', image: '', explanation: '', answers: '[{"text":"","correct":true},{"text":"","correct":false}]' } : await api(`admin/test-questions/${id}`);
+  const answers = JSON.parse(row.answers);
+  const category = ctx.field('Kategória', { value: row.category || '', list: 'cats', placeholder: 'napr. Značky' });
+  const text = ctx.field('Text otázky', { tag: 'textarea', required: true });
+  text.input.value = row.text;
+  const explanation = ctx.field('Vysvetlenie (zobrazí sa po odpovedi)', { tag: 'textarea' });
+  explanation.input.value = row.explanation;
+  const img = uploadField('Obrázok k otázke (voliteľné)', row.image, 'image');
+  const list = h('div');
+  const draw = () => list.replaceChildren(...answers.map((a, i) => {
+    const t = h('input', { value: a.text, placeholder: `Odpoveď ${i + 1}`, style: 'flex:1;padding:10px;border:1px solid #888;font:inherit', onInput: () => { a.text = t.value; } });
+    const c = h('input', { type: 'checkbox', checked: a.correct, 'aria-label': 'Správna odpoveď', onChange: () => { a.correct = c.checked; } });
+    return h('div', { class: 'upload-row', style: 'margin-bottom:8px' }, c, t, h('button', { type: 'button', class: 'btn small danger', onClick: () => { if (answers.length > 2) { answers.splice(i, 1); draw(); } } }, '✕'));
+  }));
+  draw();
+  const cats = (await api('admin/test-questions')).map((x) => x.category).filter((v, i, a) => v && a.indexOf(v) === i);
+  const box = h('div');
+  show(res.title, h('form', { class: 'form-card', onSubmit: async (e) => {
+    e.preventDefault();
+    try {
+      await api(`admin/test-questions${isNew ? '' : `/${id}`}`, { method: isNew ? 'POST' : 'PUT', body: { category: category.input.value, text: text.input.value, explanation: explanation.input.value, image: img.get(), answers } });
+      toast('Uložené.');
+      ctx.go('#/admin/otazky');
+    } catch (err) { box.replaceChildren(ctx.errBox(err.message)); window.scrollTo(0, 0); }
+  } }, h('h2', {}, isNew ? 'Nová otázka' : 'Úprava otázky'), box,
+  h('datalist', { id: 'cats' }, cats.map((c) => h('option', { value: c }))), category.node, text.node, img.node,
+  h('div', { class: 'field' }, h('label', {}, 'Odpovede (zaškrtnite správne – môže ich byť viac)'), list,
+    h('button', { type: 'button', class: 'btn small ghost', onClick: () => { answers.push({ text: '', correct: false }); draw(); } }, '+ Pridať odpoveď')),
+  explanation.node, h('div', { class: 'toolbar' }, h('button', { class: 'btn', type: 'submit' }, 'Uložiť'), h('a', { class: 'btn ghost', href: '#/admin/otazky' }, 'Zrušiť'))));
+}
+
+async function importView(show, ctx) {
+  const example = JSON.stringify([{ category: 'Značky', text: 'Text otázky?', explanation: 'Voliteľné vysvetlenie', answers: [{ text: 'Správna odpoveď', correct: true }, { text: 'Nesprávna odpoveď', correct: false }] }], null, 2);
+  const area = ctx.field('Otázky vo formáte JSON', { tag: 'textarea', class: 'code' }, 'Pole objektov: category, text, image (voliteľné), explanation (voliteľné), answers [{text, correct}]. Pridajú sa k existujúcim.');
+  area.input.value = example;
+  const box = h('div');
+  show('Import otázok', h('form', { class: 'form-card', onSubmit: async (e) => {
+    e.preventDefault();
+    try {
+      const r = await api('admin/test-questions-import', { method: 'POST', body: { questions: JSON.parse(area.input.value) } });
+      toast(`Importovaných otázok: ${r.imported}`);
+      ctx.go('#/admin/otazky');
+    } catch (err) { box.replaceChildren(ctx.errBox(err instanceof SyntaxError ? 'Neplatný JSON.' : err.message)); }
+  } }, box, area.node, h('div', { class: 'toolbar' }, h('button', { class: 'btn', type: 'submit' }, 'Importovať'), h('a', { class: 'btn ghost', href: '#/admin/otazky' }, 'Zrušiť'))));
+}
+
 /* ---------- používatelia, platby, nastavenia ---------- */
 async function usersView(show, ctx) {
   const users = await api('admin/users');
+  const ROLE = { admin: 'admin', teacher: 'učiteľ', student: 'žiak' };
+  const until = (u) => (u.role === 'admin' ? '—' : u.access_until ? new Date(u.access_until).toLocaleDateString('sk-SK') : '—');
+  const state = (u) => (u.role === 'admin' ? ['active', 'aktívny'] : u.status !== 'active' ? ['pending', 'neaktívny'] : u.access_until && u.access_until < Date.now() ? ['failed', 'vypršaný'] : ['active', 'aktívny']);
+  const refresh = (msg) => { toast(msg); ctx.go('#/admin/pouzivatelia'); };
   const tbody = h('tbody', {}, users.map((u) => h('tr', {},
-    h('td', {}, `${u.first_name} ${u.last_name}`), h('td', {}, u.email), h('td', {}, u.role),
-    h('td', {}, h('span', { class: `pill ${u.status}` }, u.status === 'active' ? 'aktívny' : 'čaká na platbu')),
-    h('td', {}, u.created_at), h('td', {}, u.paid_at || '—'),
+    h('td', {}, `${u.first_name} ${u.last_name}`), h('td', {}, u.email), h('td', {}, ROLE[u.role] || u.role),
+    h('td', {}, h('span', { class: `pill ${state(u)[0]}` }, state(u)[1])), h('td', {}, until(u)), h('td', {}, u.created_at),
     h('td', { class: 'actions' }, u.role === 'admin' ? '' : [
-      h('button', { class: 'btn small ghost', onClick: async () => { await api(`admin/users/${u.id}`, { method: 'PATCH', body: { status: u.status === 'active' ? 'pending' : 'active' } }); ctx.go('#/admin/pouzivatelia'); toast('Stav zmenený.'); } }, u.status === 'active' ? 'Deaktivovať' : 'Aktivovať ručne'), ' ',
-      h('button', { class: 'btn small danger', onClick: async () => { if (!confirm(`Zmazať ${u.email}?`)) return; await api(`admin/users/${u.id}`, { method: 'DELETE' }); ctx.go('#/admin/pouzivatelia'); } }, 'Zmazať')]))));
-  show('Používatelia', h('div', { style: 'overflow:auto' }, h('table', { class: 'admin-table' },
-    h('thead', {}, h('tr', {}, ['Meno', 'E-mail', 'Rola', 'Stav', 'Registrácia', 'Zaplatené', ''].map((t) => h('th', {}, t)))), tbody)));
+      h('button', { class: 'btn small ghost', onClick: async () => {
+        const m = prompt('Predĺžiť prístup o koľko mesiacov?', '6');
+        if (!m) return;
+        try { await api(`admin/users/${u.id}`, { method: 'PATCH', body: { extendMonths: Number(m) } }); refresh('Prístup predĺžený.'); } catch (e) { toast(e.message); }
+      } }, 'Predĺžiť'), ' ',
+      h('button', { class: 'btn small ghost', onClick: async () => { await api(`admin/users/${u.id}`, { method: 'PATCH', body: { role: u.role === 'teacher' ? 'student' : 'teacher' } }); refresh('Rola zmenená.'); } }, u.role === 'teacher' ? 'Na žiaka' : 'Na učiteľa'), ' ',
+      h('button', { class: 'btn small ghost', onClick: async () => { await api(`admin/users/${u.id}`, { method: 'PATCH', body: { status: u.status === 'active' ? 'pending' : 'active' } }); refresh('Stav zmenený.'); } }, u.status === 'active' ? 'Zablokovať' : 'Aktivovať'), ' ',
+      h('button', { class: 'btn small danger', onClick: async () => { if (!confirm(`Zmazať ${u.email}?`)) return; await api(`admin/users/${u.id}`, { method: 'DELETE' }); refresh('Zmazané.'); } }, 'Zmazať')]))));
+
+  const f = { fn: ctx.field('Meno', { required: true }), ln: ctx.field('Priezvisko', { required: true }), em: ctx.field('E-mail', { type: 'email', required: true }),
+    pw: ctx.field('Dočasné heslo (min. 8 znakov)', { type: 'text', required: true, minlength: 8 }), role: ctx.field('Rola', { tag: 'select' }) };
+  f.role.input.append(h('option', { value: 'teacher' }, 'Učiteľ'), h('option', { value: 'student' }, 'Žiak'));
+  const box = h('div');
+  const create = h('details', { class: 'form-card', style: 'margin-bottom:18px' }, h('summary', { style: 'cursor:pointer;font-weight:700;color:var(--blue)' }, '+ Vytvoriť účet (napr. učiteľa)'),
+    h('form', { style: 'margin-top:16px', onSubmit: async (e) => {
+      e.preventDefault();
+      try {
+        await api('admin/users', { method: 'POST', body: { firstName: f.fn.input.value, lastName: f.ln.input.value, email: f.em.input.value, password: f.pw.input.value, role: f.role.input.value } });
+        refresh('Účet vytvorený.');
+      } catch (err) { box.replaceChildren(ctx.errBox(err.message)); }
+    } }, box, h('div', { class: 'row' }, f.fn.node, f.ln.node), h('div', { class: 'row' }, f.em.node, f.role.node), f.pw.node, h('button', { class: 'btn', type: 'submit' }, 'Vytvoriť')));
+  show('Používatelia', create, h('div', { style: 'overflow:auto' }, h('table', { class: 'admin-table' },
+    h('thead', {}, h('tr', {}, ['Meno', 'E-mail', 'Rola', 'Stav', 'Prístup do', 'Registrácia', ''].map((t) => h('th', {}, t)))), tbody)));
 }
 
 async function paymentsView(show) {
@@ -259,14 +334,30 @@ async function paymentsView(show) {
 
 async function settingsView(show, ctx) {
   const s = await api('admin/settings');
-  const price = ctx.field('Cena prístupu (EUR)', { type: 'number', step: '0.01', min: '0', required: true });
-  const url = ctx.field('Odkaz na testy', { type: 'url' }, 'Sekcia Testy zobrazí tento odkaz (predvolene testy Ministerstva vnútra SR).');
+  const num = (label, key, hint, extra = {}) => { const f = ctx.field(label, { type: 'number', min: '1', required: true, ...extra }, hint); f.input.value = s[key]; return [key, f]; };
+  const mode = ctx.field('Režim platby', { tag: 'select' }, 'Testovací režim: účet sa aktivuje hneď po registrácii, bez platby. DEMO brána simuluje platbu kartou.');
+  mode.input.append(h('option', { value: 'free' }, 'Testovací – bez platby'), h('option', { value: 'mock' }, 'DEMO platobná brána'));
+  mode.input.value = s.payment_mode;
+  const price = ctx.field('Cena prístupu (EUR) – iba pre platobnú bránu', { type: 'number', step: '0.01', min: '0', required: true });
+  price.input.value = s.price_eur;
+  const fields = [
+    num('Prístup žiaka (mesiace)', 'access_months_student', 'Koľko mesiacov platí prístup od aktivácie / zaplatenia.'),
+    num('Prístup učiteľa (mesiace)', 'access_months_teacher'),
+    num('Skúšobný test: počet otázok', 'exam_questions', 'Predvolené hodnoty sú orientačné – nastavte podľa skúšky v autoškole.'),
+    num('Skúšobný test: čas (minúty)', 'exam_minutes'),
+    num('Skúšobný test: potrebná úspešnosť (%)', 'exam_pass_percent', '', { max: '100' }),
+  ];
+  const url = ctx.field('Odkaz na oficiálne testy', { type: 'url' }, 'Zobrazí sa v sekcii Testy (predvolene MV SR).');
   const text = ctx.field('Text nad odkazom', {});
-  price.input.value = s.price_eur; url.input.value = s.tests_url; text.input.value = s.tests_text;
+  url.input.value = s.tests_url; text.input.value = s.tests_text;
   const box = h('div');
   show('Nastavenia', h('form', { class: 'form-card', onSubmit: async (e) => {
     e.preventDefault();
-    try { await api('admin/settings', { method: 'PUT', body: { price_eur: price.input.value, tests_url: url.input.value, tests_text: text.input.value } }); box.replaceChildren(h('div', { class: 'okmsg' }, 'Uložené.')); }
+    const body = { payment_mode: mode.input.value, price_eur: price.input.value, tests_url: url.input.value, tests_text: text.input.value };
+    for (const [k, f] of fields) body[k] = f.input.value;
+    try { await api('admin/settings', { method: 'PUT', body }); box.replaceChildren(h('div', { class: 'okmsg' }, 'Uložené.')); }
     catch (err) { box.replaceChildren(ctx.errBox(err.message)); }
-  } }, box, price.node, url.node, text.node, h('button', { class: 'btn', type: 'submit' }, 'Uložiť')));
+  } }, box, h('h2', {}, 'Prístup a platba'), mode.node, price.node, fields.slice(0, 2).map(([, f]) => f.node),
+  h('h2', { style: 'margin-top:20px' }, 'Skúšobný test'), fields.slice(2).map(([, f]) => f.node),
+  h('h2', { style: 'margin-top:20px' }, 'Oficiálne testy'), url.node, text.node, h('button', { class: 'btn', type: 'submit' }, 'Uložiť')));
 }

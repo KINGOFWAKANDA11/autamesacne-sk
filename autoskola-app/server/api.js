@@ -4,6 +4,7 @@ const crypto = require('node:crypto');
 const { q, db, getSetting, setSetting } = require('./db');
 const auth = require('./auth');
 const payments = require('./payments');
+const tests = require('./tests');
 const { HttpError, sendJson, readJson } = require('./http-utils');
 const { DATA_DIR, MAX_UPLOAD_BYTES } = require('./config');
 
@@ -11,7 +12,19 @@ const UPLOAD_DIR = path.join(DATA_DIR, 'uploads');
 const UPLOAD_EXT = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.mp4', '.webm']);
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const publicUser = (u) => ({ id: u.id, email: u.email, firstName: u.first_name, lastName: u.last_name, role: u.role, status: u.status });
+const hasAccess = (u) => u.role === 'admin' || (u.status === 'active' && (!u.access_until || u.access_until > Date.now()));
+const publicUser = (u) => ({ id: u.id, email: u.email, firstName: u.first_name, lastName: u.last_name, role: u.role, status: u.status, accessUntil: u.access_until || null, access: hasAccess(u) });
+
+/** Po registrácii/prihlásení: v testovacom režime sa účet aktivuje hneď, inak vznikne platba. */
+function ensureAccess(u) {
+  if (hasAccess(u)) return { user: u, redirect: null };
+  if (payments.mode() === 'free') {
+    if (u.status === 'active') return { user: u, redirect: null, expired: true }; // vypršaný prístup predĺži admin
+    payments.activate(u.id);
+    return { user: q.get('SELECT * FROM users WHERE id = ?', u.id), redirect: null };
+  }
+  return { user: u, redirect: payments.startPayment(u).redirect, expired: u.status === 'active' };
+}
 const str = (v, max = 200) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
 
 /* ---------- CMS zdroje (generický CRUD pre administráciu) ---------- */
@@ -22,6 +35,7 @@ const RESOURCES = {
   'isec-categories': { table: 'isec_categories', cols: ['pos', 'name'], order: 'pos, id', int: ['pos'] },
   isec: { table: 'isec', cols: ['category_id', 'pos', 'num', 'text', 'image', 'video'], order: 'category_id, pos, id', int: ['category_id', 'pos', 'num'] },
   videos: { table: 'videos', cols: ['pos', 'title', 'file'], order: 'pos, id', int: ['pos'] },
+  'test-questions': { table: 'test_questions', cols: ['category', 'text', 'image', 'explanation', 'answers'], order: 'category, id', custom: true },
   legislation: { table: 'legislation', cols: ['pos', 'title', 'url'], order: 'pos, id', int: ['pos'] },
 };
 
@@ -54,6 +68,16 @@ function crud(req, res, user, resName, id, body) {
     return sendJson(res, 200, row);
   }
   try {
+    if (r.custom && (req.method === 'POST' || req.method === 'PUT')) {
+      const row = tests.validateQuestion(body);
+      const keys = Object.keys(row);
+      if (req.method === 'POST' && !id) {
+        const info = q.run(`INSERT INTO ${r.table}(${keys.join(',')}) VALUES(${keys.map(() => '?').join(',')})`, ...keys.map((k) => row[k]));
+        return sendJson(res, 201, q.get(`SELECT * FROM ${r.table} WHERE id = ?`, Number(info.lastInsertRowid)));
+      }
+      q.run(`UPDATE ${r.table} SET ${keys.map((k) => `${k}=?`).join(',')} WHERE id = ?`, ...keys.map((k) => row[k]), id);
+      return sendJson(res, 200, q.get(`SELECT * FROM ${r.table} WHERE id = ?`, id));
+    }
     if (req.method === 'POST' && !id) {
       const row = cleanRow(r, body);
       const keys = Object.keys(row);
@@ -157,7 +181,7 @@ async function handleApi(req, res, url) {
   const needUser = () => { if (!user) throw new HttpError(401, 'Prihláste sa.'); return user; };
   const needPaid = () => {
     needUser();
-    if (user.role !== 'admin' && user.status !== 'active') throw new HttpError(402, 'Prístup sa aktivuje po úhrade.');
+    if (!hasAccess(user)) throw new HttpError(402, 'Prístup nie je aktívny alebo vypršal.');
     return user;
   };
   const needAdmin = () => { if (needUser().role !== 'admin') throw new HttpError(403, 'Iba pre administrátora.'); return user; };
@@ -165,7 +189,7 @@ async function handleApi(req, res, url) {
   /* --- verejné --- */
   if (p === 'config' && method === 'GET') {
     const pr = payments.price();
-    return sendJson(res, 200, { priceCents: pr.amount_cents, currency: pr.currency, provider: pr.provider });
+    return sendJson(res, 200, { priceCents: pr.amount_cents, currency: pr.currency, provider: pr.provider, free: pr.provider === 'free' });
   }
 
   if (p === 'register' && method === 'POST') {
@@ -187,9 +211,9 @@ async function handleApi(req, res, url) {
     );
     const u = q.get('SELECT * FROM users WHERE id = ?', Number(info.lastInsertRowid));
     const s = auth.createSession(u.id);
-    const checkout = payments.startPayment(u);
+    const ens = ensureAccess(u);
     res.setHeader('Set-Cookie', auth.cookieHeader(s.token, 30 * 86400));
-    return sendJson(res, 201, { user: publicUser(u), redirect: checkout.redirect });
+    return sendJson(res, 201, { user: publicUser(ens.user), redirect: ens.redirect });
   }
 
   if (p === 'login' && method === 'POST') {
@@ -205,11 +229,8 @@ async function handleApi(req, res, url) {
     auth.loginOk(key);
     const s = auth.createSession(u.id);
     res.setHeader('Set-Cookie', auth.cookieHeader(s.token, 30 * 86400));
-    let pendingPayment = null;
-    if (u.status !== 'active' && u.role !== 'admin') {
-      pendingPayment = payments.startPayment(u).redirect;
-    }
-    return sendJson(res, 200, { user: publicUser(u), redirect: pendingPayment });
+    const ens = ensureAccess(u);
+    return sendJson(res, 200, { user: publicUser(ens.user), redirect: ens.redirect, expired: !!ens.expired });
   }
 
   if (p === 'logout' && method === 'POST') {
@@ -244,8 +265,9 @@ async function handleApi(req, res, url) {
   }
 
   if (p === 'me' && method === 'GET') {
-    const unpaid = user && user.role !== 'admin' && user.status !== 'active';
-    return sendJson(res, 200, { user: user ? publicUser(user) : null, redirect: unpaid ? payments.startPayment(user).redirect : null });
+    if (!user) return sendJson(res, 200, { user: null });
+    const ens = ensureAccess(user);
+    return sendJson(res, 200, { user: publicUser(ens.user), redirect: ens.redirect, expired: !!ens.expired });
   }
 
   /* --- platba --- */
@@ -323,7 +345,16 @@ async function handleApi(req, res, url) {
       needPaid();
       return sendJson(res, 200, { url: getSetting('tests_url'), text: getSetting('tests_text') });
     }
+    if (p === 'tests/meta') { needPaid(); return sendJson(res, 200, { ...tests.meta(), url: getSetting('tests_url'), text: getSetting('tests_text') }); }
+    if (p === 'tests/history') { needPaid(); return sendJson(res, 200, tests.history(user)); }
     if (p === 'search') { needPaid(); return sendJson(res, 200, search(url.searchParams.get('q'))); }
+  }
+
+  if (method === 'POST' && parts[0] === 'tests') {
+    needPaid();
+    if (parts[1] === 'start') return sendJson(res, 200, tests.start(user, await readJson(req)));
+    if (parts[1] === 'check') return sendJson(res, 200, tests.check(await readJson(req)));
+    if (parts[2] === 'submit') return sendJson(res, 200, tests.submit(user, Number(parts[1]), await readJson(req)));
   }
 
   /* --- administrácia --- */
@@ -333,14 +364,41 @@ async function handleApi(req, res, url) {
 
     if (parts[1] === 'users') {
       if (method === 'GET') {
-        return sendJson(res, 200, q.all(`SELECT u.id,u.email,u.first_name,u.last_name,u.role,u.status,u.created_at,
+        return sendJson(res, 200, q.all(`SELECT u.id,u.email,u.first_name,u.last_name,u.role,u.status,u.created_at,u.access_until,
           (SELECT MAX(paid_at) FROM payments WHERE user_id=u.id AND status='paid') AS paid_at FROM users u ORDER BY u.id DESC`));
+      }
+      if (method === 'POST' && !parts[2]) { // admin zakladá účet (napr. učiteľa)
+        const b = await readJson(req);
+        const email = str(b.email, 254).toLowerCase();
+        if (!EMAIL_RE.test(email)) throw new HttpError(400, 'Zadajte platný e-mail.');
+        if (!str(b.firstName, 80) || !str(b.lastName, 80)) throw new HttpError(400, 'Zadajte meno a priezvisko.');
+        if (!['student', 'teacher'].includes(b.role)) throw new HttpError(400, 'Neplatná rola.');
+        const pwErr = auth.validatePassword(b.password);
+        if (pwErr) throw new HttpError(400, pwErr);
+        if (q.get('SELECT id FROM users WHERE email = ?', email)) throw new HttpError(409, 'Tento e-mail už existuje.');
+        const info = q.run("INSERT INTO users(email,first_name,last_name,pass_hash,role,consent_at) VALUES(?,?,?,?,?,datetime('now'))", email, str(b.firstName, 80), str(b.lastName, 80), auth.hashPassword(b.password), b.role);
+        payments.activate(Number(info.lastInsertRowid));
+        return sendJson(res, 201, { ok: true });
       }
       const id = Number(parts[2]);
       if (method === 'PATCH' && id) {
         const b = await readJson(req);
-        if (!['pending', 'active'].includes(b.status)) throw new HttpError(400, 'Neplatný stav.');
-        q.run('UPDATE users SET status = ? WHERE id = ?', b.status, id);
+        const target = q.get('SELECT * FROM users WHERE id = ?', id);
+        if (!target) throw new HttpError(404, 'Používateľ neexistuje.');
+        if (b.status !== undefined) {
+          if (!['pending', 'active'].includes(b.status)) throw new HttpError(400, 'Neplatný stav.');
+          if (b.status === 'active' && !(target.access_until > Date.now())) payments.activate(id);
+          else q.run('UPDATE users SET status = ? WHERE id = ?', b.status, id);
+        }
+        if (b.role !== undefined) {
+          if (!['student', 'teacher'].includes(b.role) || target.role === 'admin') throw new HttpError(400, 'Neplatná rola.');
+          q.run('UPDATE users SET role = ? WHERE id = ?', b.role, id);
+        }
+        if (b.extendMonths !== undefined) {
+          const m = Number(b.extendMonths);
+          if (!Number.isInteger(m) || m < 1 || m > 120) throw new HttpError(400, 'Počet mesiacov musí byť 1 – 120.');
+          payments.activate(id, m);
+        }
         return sendJson(res, 200, { ok: true });
       }
       if (method === 'DELETE' && id) {
@@ -349,15 +407,25 @@ async function handleApi(req, res, url) {
         return sendJson(res, 200, { ok: true });
       }
     }
+    if (parts[1] === 'test-questions-import' && method === 'POST') {
+      const b = await readJson(req, 16 * 1024 * 1024);
+      return sendJson(res, 201, { imported: tests.importQuestions(b.questions) });
+    }
     if (parts[1] === 'payments' && method === 'GET') {
       return sendJson(res, 200, q.all(`SELECT p.*, u.email FROM payments p JOIN users u ON u.id=p.user_id ORDER BY p.id DESC LIMIT 200`));
     }
     if (parts[1] === 'settings') {
-      const keys = ['price_eur', 'tests_url', 'tests_text'];
-      if (method === 'GET') return sendJson(res, 200, Object.fromEntries(keys.map((k) => [k, getSetting(k)])));
+      const keys = ['payment_mode', 'price_eur', 'access_months_student', 'access_months_teacher', 'exam_questions', 'exam_minutes', 'exam_pass_percent', 'tests_url', 'tests_text'];
+      const defaults = { payment_mode: 'free', price_eur: '49', access_months_student: '6', access_months_teacher: '12', exam_questions: '25', exam_minutes: '30', exam_pass_percent: '90' };
+      if (method === 'GET') return sendJson(res, 200, Object.fromEntries(keys.map((k) => [k, getSetting(k, defaults[k] ?? '')])));
       if (method === 'PUT') {
         const b = await readJson(req);
+        if (b.payment_mode !== undefined && !payments.MODES.includes(b.payment_mode)) throw new HttpError(400, 'Neplatný režim platby.');
         if (b.price_eur !== undefined && !(Number(b.price_eur) >= 0)) throw new HttpError(400, 'Neplatná cena.');
+        for (const k of ['access_months_student', 'access_months_teacher', 'exam_questions', 'exam_minutes']) {
+          if (b[k] !== undefined && !(Number.isInteger(Number(b[k])) && Number(b[k]) >= 1 && Number(b[k]) <= 1000)) throw new HttpError(400, 'Číselné hodnoty musia byť celé čísla od 1.');
+        }
+        if (b.exam_pass_percent !== undefined && !(Number(b.exam_pass_percent) >= 1 && Number(b.exam_pass_percent) <= 100)) throw new HttpError(400, 'Hranica úspešnosti musí byť 1 – 100 %.');
         for (const k of keys) if (b[k] !== undefined) setSetting(k, str(String(b[k]), 500));
         return sendJson(res, 200, { ok: true });
       }

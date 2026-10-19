@@ -283,3 +283,27 @@ body.dash .search input{height:52px}
   .isec-grid{grid-template-columns:1fr}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* ---------- testy ---------- */
+.test-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;max-width:1260px}
+.tcard{background:#fff;padding:20px;display:flex;flex-direction:column;justify-content:space-between;gap:10px;min-height:170px}
+.tcard h2{margin:0;font-size:19px;font-weight:700;color:var(--blue)}
+.tcard p{margin:0;color:#444;font-size:14px}
+.tcard .btn{align-self:flex-start}
+.timer{font-size:40px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}
+.timer.low{color:var(--yellow)}
+.q-text{font-size:19px;font-weight:600;margin:0 0 14px;max-width:1000px}
+.q-hint{color:#555;font-size:14px;margin:0 0 12px}
+.answers{display:grid;gap:8px;max-width:1000px;margin-top:14px}
+.answer{display:flex;gap:12px;align-items:flex-start;background:#fff;border:2px solid transparent;padding:12px 14px;font-size:16px;cursor:pointer}
+.answer input{margin-top:5px;width:18px;height:18px;flex:none}
+.answer:hover{border-color:#c9d1ff}
+.answer.right{background:#e3f4e8;border-color:#2e9b57}
+.answer.wrong{background:#fdecea;border-color:var(--danger)}
+.numgrid a.done{background:#bcc6ff}
+.numgrid a.active.done{background:var(--blue)}
+.res-item{background:#fff;padding:16px;margin:0 0 14px;max-width:1000px;border-left:6px solid var(--grid)}
+.res-item.ok{border-left-color:#2e9b57}
+.res-item.bad{border-left-color:var(--danger)}
+.res-item .answer{cursor:default;padding:8px 12px;font-size:15px}
+.res-item .answer:hover{border-color:transparent}

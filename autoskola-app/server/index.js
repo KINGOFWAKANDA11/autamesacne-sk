@@ -36,7 +36,7 @@ function createServer() {
 
       if (url.pathname.startsWith('/media/')) {
         const user = auth.userFromRequest(req);
-        if (!user || (user.role !== 'admin' && user.status !== 'active')) throw new HttpError(401, 'Prístup len pre prihlásených s aktívnym účtom.');
+        if (!user || !(user.role === 'admin' || (user.status === 'active' && (!user.access_until || user.access_until > Date.now())))) throw new HttpError(401, 'Prístup len pre prihlásených s aktívnym účtom.');
         const name = decodeURIComponent(url.pathname.slice(7));
         if (!/^[\w.-]+$/.test(name)) throw new HttpError(400, 'Neplatná cesta.');
         // SVG z CMS sa zobrazuje iba ako obrázok; sandbox bráni vykonaniu skriptov pri priamom otvorení

@@ -3,7 +3,7 @@
 // Ilustrácie sú generované jednoduché SVG – skutočné fotky/grafiku nahráte cez CMS.
 const fs = require('node:fs');
 const path = require('node:path');
-const { db, q, setSetting } = require('./db');
+const { db, q, getSetting, setSetting } = require('./db');
 const { DATA_DIR } = require('./config');
 
 const UP = path.join(DATA_DIR, 'uploads');
@@ -171,7 +171,28 @@ ${sym('epc', 'Signalizuje poruchu v škrtiacej klapke alebo priamo elektronické
   return subs('Úvod');
 }
 
+/* ukážkové otázky – iba z faktov uvedených v návrhu; skutočnú databázu otázok nahrajte cez CMS (import) */
+function seedQuestions() {
+  if (getSetting('questions_seeded')) return;
+  const NOTE = '';
+  const A = (text, correct = false) => ({ text, correct });
+  const Q = [
+    ['Pravidlá cestnej premávky', 'Za chodca sa považuje aj osoba, ktorá:', '', [A('tlačí bicykel', true), A('vedie zviera', true), A('riadi motorové vozidlo')]],
+    ['Pravidlá cestnej premávky', 'Osoba tlačiaca ručný vozík je chodcom, ak celková šírka vozíka nepresahuje:', '', [A('400 mm'), A('600 mm', true), A('800 mm')]],
+    ['Značky', 'Čo vyjadruje výstražná značka na obrázku?', '/media/seed-znacka-danger.svg', [A('Iné nebezpečenstvo, na ktoré nemožno upozorniť vhodnou výstražnou značkou', true), A('Zákaz vjazdu'), A('Priechod pre chodcov')]],
+    ['Vozidlo a jeho údržba', 'Ktoré časti tvoria podvozok vozidla?', '/media/seed-podvozok.svg', [A('rám vozidla', true), A('nápravy s kolesami a pérovaním', true), A('riadenie', true), A('brzdové zariadenie', true), A('výstroj vozidla')]],
+    ['Vozidlo a jeho údržba', 'Čo signalizuje kontrolka na obrázku?', '/media/seed-symbol-parking.svg', [A('Parkovacia brzda je zapnutá', true), A('Nízka hladina oleja'), A('Porucha airbagov')]],
+    ['Vozidlo a jeho údržba', 'Čo znamená, ak kontrolka ABS bliká?', '/media/seed-symbol-abs.svg', [A('ABS nefunguje – hrozí šmyk', true), A('Brzdy sú v poriadku'), A('Zapnuté sú hmlové svetlá')]],
+    ['Križovatky', 'Na križovatke ciest nerozlíšených dopravnými značkami platí prednosť v jazde vozidiel prichádzajúcich:', '/media/seed-krizovatka-1.svg', [A('sprava', true), A('zľava'), A('z protismeru')]],
+  ];
+  for (const [category, text, image, answers] of Q) {
+    q.run('INSERT INTO test_questions(category,text,image,explanation,answers) VALUES(?,?,?,?,?)', category, text, image, NOTE, JSON.stringify(answers));
+  }
+  setSetting('questions_seeded', '1');
+}
+
 function seed() {
+  seedQuestions();
   if (q.get('SELECT COUNT(*) AS c FROM lessons').c > 0) return false;
 
   const chassis = writeAsset('seed-podvozok.svg', chassisSvg());
@@ -233,7 +254,12 @@ function seed() {
     ].forEach(([t, u], i) => q.run('INSERT INTO legislation(pos,title,url) VALUES(?,?,?)', i + 1, t, u));
 
     setSetting('price_eur', '49');
-    setSetting('payment_provider', 'mock');
+    setSetting('payment_mode', 'free');
+    setSetting('access_months_student', '6');
+    setSetting('access_months_teacher', '12');
+    setSetting('exam_questions', '25');
+    setSetting('exam_minutes', '30');
+    setSetting('exam_pass_percent', '90');
     setSetting('tests_url', 'https://www.minv.sk/?testy');
     setSetting('tests_text', 'Oficiálne testy Ministerstva vnútra SR nájdete na:');
     db.exec('COMMIT');

@@ -48,7 +48,7 @@ function userFromRequest(req) {
   const token = parseCookies(req).sid;
   if (!token) return null;
   const row = q.get(
-    `SELECT u.id, u.email, u.first_name, u.last_name, u.role, u.status, s.expires_at
+    `SELECT u.id, u.email, u.first_name, u.last_name, u.role, u.status, u.access_until, s.expires_at
        FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token_hash = ?`,
     sha(token)
   );
